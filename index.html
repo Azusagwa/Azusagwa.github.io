@@ -20,6 +20,62 @@
   <div class="bg-glow bg-glow--2"></div>
   <div class="bg-glow bg-glow--3"></div>
   <div class="grid-overlay"></div>
+  <svg class="knowledge-field" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="knowledge-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1600" y2="1000">
+        <stop offset="0" stop-color="#00d4ff" />
+        <stop offset="0.55" stop-color="#ffb46b" />
+        <stop offset="1" stop-color="#7c5cff" />
+      </linearGradient>
+      <radialGradient id="field-mask" cx="0.5" cy="0.48" r="0.72">
+        <stop offset="0" stop-color="#fff" stop-opacity="0" />
+        <stop offset="0.45" stop-color="#fff" stop-opacity="0.12" />
+        <stop offset="1" stop-color="#fff" stop-opacity="1" />
+      </radialGradient>
+      <mask id="center-clear">
+        <rect width="1600" height="1000" fill="url(#field-mask)" />
+      </mask>
+    </defs>
+    <g mask="url(#center-clear)">
+      <g class="graph-lines">
+        <path d="M120 170 C230 220 260 300 240 390 C225 460 160 500 145 580" />
+        <path d="M240 390 C310 440 300 540 235 610 C205 645 185 700 175 760" />
+        <path d="M145 580 C210 650 260 710 330 740 C400 770 450 810 470 870" />
+        <path d="M640 170 C690 225 735 265 790 295 C845 325 900 305 950 265" />
+        <path d="M1480 140 C1390 200 1360 290 1380 380 C1395 450 1460 490 1475 570" />
+        <path d="M1380 380 C1310 430 1320 530 1385 600 C1415 635 1435 690 1445 750" />
+        <path d="M1475 570 C1410 640 1360 700 1290 730 C1220 760 1170 800 1150 860" />
+        <path d="M240 390 C560 270 1040 270 1380 380" />
+        <path d="M330 740 C650 620 950 620 1290 730" />
+        <path d="M470 870 C770 760 850 760 1150 860" />
+      </g>
+      <g class="graph-nodes">
+        <circle cx="120" cy="170" r="4" />
+        <circle cx="240" cy="390" r="6" />
+        <circle cx="145" cy="580" r="3" />
+        <circle cx="175" cy="760" r="5" />
+        <circle cx="330" cy="740" r="3" />
+        <circle cx="470" cy="870" r="4" />
+        <circle cx="640" cy="170" r="3" />
+        <circle cx="790" cy="295" r="4" />
+        <circle cx="950" cy="265" r="3" />
+        <circle cx="1480" cy="140" r="4" />
+        <circle cx="1380" cy="380" r="6" />
+        <circle cx="1475" cy="570" r="3" />
+        <circle cx="1445" cy="750" r="5" />
+        <circle cx="1290" cy="730" r="3" />
+        <circle cx="1150" cy="860" r="4" />
+      </g>
+      <g class="graph-labels">
+        <text x="118" y="132">AGENT</text>
+        <text x="218" y="358">RAG</text>
+        <text x="620" y="136">RETRIEVE</text>
+        <text x="928" y="238">RERANK</text>
+        <text x="1358" y="348">LLM</text>
+        <text x="1238" y="834">KNOWLEDGE BASE</text>
+      </g>
+    </g>
+  </svg>
 
   <header class="site-header">
     <div class="container header-inner">
@@ -195,38 +251,70 @@
       var canvas = document.getElementById('particles');
       var ctx = canvas.getContext('2d');
       var W, H, particles = [];
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       function resize() {
-        W = canvas.width = window.innerWidth;
-        H = canvas.height = window.innerHeight;
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       }
       window.addEventListener('resize', resize);
       resize();
-      var N = 90;
+      var N = W < 720 ? 45 : 70;
       for (var i = 0; i < N; i++) {
         particles.push({
           x: Math.random() * W,
           y: Math.random() * H,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          r: Math.random() * 1.8 + 0.4,
-          c: ['0,212,255', '124,92,255', '255,110,199', '255,255,255'][i % 4]
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: Math.random() * 1.6 + 0.6,
+          c: ['0,212,255', '0,212,255', '124,92,255', '255,180,107', '255,255,255'][i % 5]
         });
       }
-      function draw() {
+      function render() {
         ctx.clearRect(0, 0, W, H);
+        ctx.lineWidth = 1;
         for (var i = 0; i < particles.length; i++) {
           var p = particles[i];
           p.x += p.vx; p.y += p.vy;
           if (p.x < 0 || p.x > W) p.vx *= -1;
           if (p.y < 0 || p.y > H) p.vy *= -1;
+        }
+        for (var j = 0; j < particles.length; j++) {
+          for (var k = j + 1; k < particles.length; k++) {
+            var a = particles[j];
+            var b = particles[k];
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            var distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < 140) {
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = 'rgba(0,212,255,' + ((1 - distance / 140) * 0.11).toFixed(3) + ')';
+              ctx.stroke();
+            }
+          }
+        }
+        for (var n = 0; n < particles.length; n++) {
+          var node = particles[n];
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(' + p.c + ',0.8)';
+          ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + node.c + ',0.68)';
           ctx.fill();
         }
-        requestAnimationFrame(draw);
       }
-      draw();
+      render();
+      if (!reduceMotion) {
+        requestAnimationFrame(function animate() {
+          render();
+          requestAnimationFrame(animate);
+        });
+      }
     })();
   </script>
 </body>

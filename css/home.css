@@ -1,12 +1,13 @@
 :root {
-  --bg: #070b14;
-  --bg-soft: #0d1424;
-  --card: #101827;
-  --border: #1d2a42;
+  --bg: #05080f;
+  --bg-soft: #0a1120;
+  --card: #0d1523;
+  --border: #273b55;
   --text: #e6edf7;
-  --muted: #8b9bb4;
+  --muted: #a3b3c9;
   --accent: #00d4ff;
   --accent-2: #7c5cff;
+  --accent-3: #ffb46b;
   --font-sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   --font-mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
 }
@@ -20,7 +21,10 @@ body {
   min-height: 100vh;
   font-family: var(--font-sans);
   color: var(--text);
-  background: var(--bg);
+  background:
+    radial-gradient(1000px 620px at 10% 8%, rgba(0, 212, 255, 0.08), transparent 65%),
+    radial-gradient(900px 640px at 90% 22%, rgba(124, 92, 255, 0.10), transparent 65%),
+    linear-gradient(160deg, #05080f 0%, #081120 48%, #04070d 100%);
   overflow-x: hidden;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -46,6 +50,63 @@ a { color: inherit; text-decoration: none; }
 }
 .bg-glow--1 { width: 480px; height: 480px; background: var(--accent); top: -220px; right: -120px; }
 .bg-glow--2 { width: 520px; height: 520px; background: var(--accent-2); bottom: -260px; left: -160px; }
+
+.knowledge-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.72;
+}
+
+.knowledge-field .graph-lines path {
+  fill: none;
+  stroke: url(#knowledge-line);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 5 18;
+  opacity: 0.34;
+  animation: knowledge-flow 11s linear infinite;
+}
+
+.knowledge-field .graph-nodes circle {
+  fill: var(--accent);
+  opacity: 0.52;
+  animation: node-pulse 4.8s ease-in-out infinite;
+}
+
+.knowledge-field .graph-nodes circle:nth-child(3n) { fill: var(--accent-3); }
+.knowledge-field .graph-nodes circle:nth-child(4n) { fill: var(--accent-2); }
+.knowledge-field .graph-nodes circle:nth-child(2) { animation-delay: 0.4s; }
+.knowledge-field .graph-nodes circle:nth-child(5) { animation-delay: 1.1s; }
+.knowledge-field .graph-nodes circle:nth-child(8) { animation-delay: 1.8s; }
+.knowledge-field .graph-nodes circle:nth-child(11) { animation-delay: 2.5s; }
+.knowledge-field .graph-nodes circle:nth-child(14) { animation-delay: 3.2s; }
+
+.knowledge-field .graph-labels text {
+  fill: #b8c8dd;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  opacity: 0.28;
+  animation: label-breathe 7s ease-in-out infinite;
+}
+
+@keyframes knowledge-flow {
+  to { stroke-dashoffset: -460; }
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.32; transform: scale(0.86); }
+  50% { opacity: 0.92; transform: scale(1.06); }
+}
+
+@keyframes label-breathe {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.38; }
+}
 
 /* 网格背景 */
 .grid-overlay {
@@ -224,10 +285,10 @@ h1 {
   align-items: center;
   gap: 22px;
   padding: 24px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(58, 80, 112, 0.72);
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(16,24,39,0.9), rgba(13,20,36,0.7));
-  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, rgba(11,18,30,0.94), rgba(8,13,22,0.88));
+  backdrop-filter: blur(14px);
   transition: all 0.25s ease;
 }
 .project-card:hover { border-color: rgba(0,212,255,0.45); transform: translateY(-3px); }
@@ -285,6 +346,20 @@ h1 {
 
 @media (max-width: 600px) {
   main { padding-top: 52px; }
+  .container { padding-left: 18px; padding-right: 18px; }
+  .eyebrow,
+  .tagline,
+  .subline {
+    max-width: 100%;
+    white-space: normal;
+  }
+  .actions { gap: 10px; }
+  .btn { padding: 11px 18px; font-size: 14px; }
+  .btn-large { padding: 14px 24px; font-size: 16px; }
+  .metrics { gap: 20px; padding: 16px 8px; }
+  .metric-num { font-size: 19px; }
+  .metric-label { font-size: 10px; letter-spacing: 0.12em; }
+  .terminal-body { word-break: break-word; }
   .project-card { flex-direction: column; align-items: flex-start; }
   .project-link { margin-left: 0; }
 }
@@ -292,7 +367,7 @@ h1 {
 /* 第三光晕 */
 .bg-glow--3 {
   width: 360px; height: 360px;
-  background: #ff6ec7;
+  background: var(--accent-3);
   top: 35%; right: 28%;
   opacity: 0.07;
 }
@@ -315,17 +390,18 @@ h1 {
 .chip {
   font-size: 14px; color: var(--text);
   padding: 8px 16px; border: 1px solid var(--border); border-radius: 999px;
-  background: rgba(255,255,255,0.02); transition: all .2s ease;
+  background: rgba(8,13,22,0.84); transition: all .2s ease;
 }
 .chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
 /* 终端装饰卡 */
 .terminal {
   margin-top: 44px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(58,80,112,0.78);
   border-radius: 14px;
   overflow: hidden;
-  background: #0a0f1a;
+  background: rgba(7,12,20,0.94);
+  backdrop-filter: blur(14px);
   box-shadow: 0 20px 50px rgba(0,0,0,0.35);
   text-align: left;
 }
@@ -333,7 +409,7 @@ h1 {
   display: flex; align-items: center; gap: 7px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
-  background: rgba(255,255,255,0.02);
+  background: rgba(255,255,255,0.035);
 }
 .dot { width: 11px; height: 11px; border-radius: 50%; }
 .dot-red { background: #ff5f57; }
@@ -367,7 +443,7 @@ h1 {
     radial-gradient(1px 1px at 30% 50%, #fff, transparent);
   background-repeat: repeat;
   background-size: 260px 260px;
-  opacity: 0.7;
+  opacity: 0.32;
   animation: twinkle 5s ease-in-out infinite alternate;
 }
 @keyframes twinkle { from { opacity: .4; } to { opacity: .9; } }
@@ -376,9 +452,9 @@ h1 {
 .aurora {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
-    radial-gradient(60% 40% at 15% 20%, rgba(0,212,255,0.18), transparent 70%),
-    radial-gradient(50% 40% at 85% 30%, rgba(124,92,255,0.20), transparent 70%),
-    radial-gradient(55% 45% at 60% 80%, rgba(255,110,199,0.14), transparent 70%);
+    radial-gradient(60% 40% at 15% 20%, rgba(0,212,255,0.10), transparent 70%),
+    radial-gradient(50% 40% at 85% 30%, rgba(124,92,255,0.11), transparent 70%),
+    radial-gradient(55% 45% at 60% 80%, rgba(255,180,107,0.07), transparent 70%);
   filter: blur(10px);
   mix-blend-mode: screen;
 }
@@ -401,6 +477,7 @@ h1 {
 /* 粒子画布 */
 #particles {
   position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  opacity: 0.42;
 }
 
 /* 打字机光标 */
@@ -428,8 +505,9 @@ h1 {
   gap: 40px;
   margin-top: 34px;
   padding: 18px 0;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid rgba(105,130,165,0.20);
+  border-bottom: 1px solid rgba(105,130,165,0.20);
+  background: linear-gradient(90deg, rgba(7,12,21,0.18), rgba(7,12,21,0.55), rgba(7,12,21,0.18));
 }
 .metric {
   display: flex;
@@ -452,6 +530,14 @@ h1 {
   font-size: 11px;
   letter-spacing: 0.18em;
   color: var(--muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .knowledge-field .graph-lines path,
+  .knowledge-field .graph-nodes circle,
+  .knowledge-field .graph-labels text {
+    animation: none;
+  }
 }
 
 /* subline 打字机光标 */
