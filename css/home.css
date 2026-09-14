@@ -136,7 +136,7 @@ main { position: relative; z-index: 2; padding-top: 72px; padding-bottom: 80px; 
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  transform: translate(-13%, 2%) scale(2.6);
+  transform: translate(-13%, 2%) scale(1.5);
   transform-origin: 63% 48%;
 }
 
