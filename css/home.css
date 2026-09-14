@@ -130,77 +130,6 @@ a { color: inherit; text-decoration: none; }
   animation: spectrum-sweep 10s cubic-bezier(.45,0,.25,1) infinite;
 }
 
-.meteor-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.meteor {
-  position: absolute;
-  width: 170px;
-  height: 2px;
-  border-radius: 999px;
-  opacity: 0;
-  transform: rotate(28deg) translate3d(-30vw, -30vh, 0);
-  background: linear-gradient(90deg, transparent, var(--meteor-color));
-  box-shadow: 0 0 14px var(--meteor-color);
-  animation: meteor-fly 7.5s linear infinite;
-}
-
-.meteor::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -2px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 12px var(--meteor-color);
-  transform: translateY(-50%);
-}
-
-.meteor--1 {
-  --meteor-color: #00d4ff;
-  top: -4vh;
-  left: -12vw;
-  animation-delay: 0s;
-}
-.meteor--2 {
-  --meteor-color: #ffb46b;
-  top: 8vh;
-  left: -24vw;
-  animation-delay: 1.7s;
-}
-.meteor--3 {
-  --meteor-color: #ff5f9e;
-  top: -8vh;
-  left: 12vw;
-  animation-delay: 3.1s;
-}
-.meteor--4 {
-  --meteor-color: #7dffcf;
-  top: 16vh;
-  left: -6vw;
-  animation-delay: 4.4s;
-}
-.meteor--5 {
-  --meteor-color: #7c5cff;
-  top: -2vh;
-  left: 38vw;
-  animation-delay: 5.6s;
-}
-.meteor--6 {
-  --meteor-color: #67e8f9;
-  top: 22vh;
-  left: 24vw;
-  animation-delay: 6.5s;
-}
-
 @keyframes spectrum-sweep {
   0%, 54% {
     opacity: 0;
@@ -214,23 +143,6 @@ a { color: inherit; text-decoration: none; }
   100% {
     opacity: 0;
     transform: translateX(35%) skewX(-16deg);
-  }
-}
-
-@keyframes meteor-fly {
-  0% {
-    opacity: 0;
-    transform: rotate(28deg) translate3d(-30vw, -30vh, 0);
-  }
-  4% { opacity: 1; }
-  22% { opacity: 0.75; }
-  34% {
-    opacity: 0;
-    transform: rotate(28deg) translate3d(120vw, 80vh, 0);
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(28deg) translate3d(120vw, 80vh, 0);
   }
 }
 
@@ -660,7 +572,6 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
   .spectrum-sweep,
-  .meteor,
   .knowledge-field .graph-lines path,
   .knowledge-field .graph-nodes circle,
   .knowledge-field .graph-labels text {
