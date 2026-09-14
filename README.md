@@ -1,9 +1,9 @@
-# 刘家浩的个人博客
+# 个人博客
 
 这是我的个人静态博客，主要记录 AI Agent、RAG 应用开发、大模型工程化等内容。
 
-- 站点地址：<https://Azusagwa.github.io/>
-- GitHub：<https://github.com/Azusagwa>
+- 站点地址：[https://Azusagwa.github.io/](https://Azusagwa.github.io/)
+- GitHub：[https://github.com/Azusagwa](https://github.com/Azusagwa)
 - 邮箱：<2018106340@qq.com>
 
 ## 技术栈
