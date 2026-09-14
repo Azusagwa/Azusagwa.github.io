@@ -20,11 +20,22 @@
   <div class="bg-glow bg-glow--2"></div>
   <div class="bg-glow bg-glow--3"></div>
   <div class="grid-overlay"></div>
+  <div class="spectrum-sweep" aria-hidden="true"></div>
+  <div class="meteor-layer" aria-hidden="true">
+    <span class="meteor meteor--1"></span>
+    <span class="meteor meteor--2"></span>
+    <span class="meteor meteor--3"></span>
+    <span class="meteor meteor--4"></span>
+    <span class="meteor meteor--5"></span>
+    <span class="meteor meteor--6"></span>
+  </div>
   <svg class="knowledge-field" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="knowledge-line" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1600" y2="1000">
         <stop offset="0" stop-color="#00d4ff" />
-        <stop offset="0.55" stop-color="#ffb46b" />
+        <stop offset="0.22" stop-color="#7dffcf" />
+        <stop offset="0.46" stop-color="#ffb46b" />
+        <stop offset="0.70" stop-color="#ff5f9e" />
         <stop offset="1" stop-color="#7c5cff" />
       </linearGradient>
       <radialGradient id="field-mask" cx="0.5" cy="0.48" r="0.72">
@@ -295,7 +306,7 @@
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = 'rgba(0,212,255,' + ((1 - distance / 140) * 0.11).toFixed(3) + ')';
+              ctx.strokeStyle = 'rgba(' + a.c + ',' + ((1 - distance / 140) * 0.15).toFixed(3) + ')';
               ctx.stroke();
             }
           }

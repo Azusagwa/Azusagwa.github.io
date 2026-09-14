@@ -8,6 +8,8 @@
   --accent: #00d4ff;
   --accent-2: #7c5cff;
   --accent-3: #ffb46b;
+  --accent-4: #ff5f9e;
+  --accent-5: #7dffcf;
   --font-sans: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   --font-mono: "Cascadia Code", "JetBrains Mono", Consolas, monospace;
 }
@@ -58,27 +60,29 @@ a { color: inherit; text-decoration: none; }
   width: 100%;
   height: 100%;
   pointer-events: none;
-  opacity: 0.72;
+  opacity: 0.86;
 }
 
 .knowledge-field .graph-lines path {
   fill: none;
   stroke: url(#knowledge-line);
-  stroke-width: 1.2;
+  stroke-width: 1.6;
   stroke-linecap: round;
   stroke-dasharray: 5 18;
-  opacity: 0.34;
+  opacity: 0.50;
   animation: knowledge-flow 11s linear infinite;
 }
 
 .knowledge-field .graph-nodes circle {
   fill: var(--accent);
-  opacity: 0.52;
+  opacity: 0.72;
   animation: node-pulse 4.8s ease-in-out infinite;
 }
 
 .knowledge-field .graph-nodes circle:nth-child(3n) { fill: var(--accent-3); }
 .knowledge-field .graph-nodes circle:nth-child(4n) { fill: var(--accent-2); }
+.knowledge-field .graph-nodes circle:nth-child(5n) { fill: var(--accent-4); }
+.knowledge-field .graph-nodes circle:nth-child(7n) { fill: var(--accent-5); }
 .knowledge-field .graph-nodes circle:nth-child(2) { animation-delay: 0.4s; }
 .knowledge-field .graph-nodes circle:nth-child(5) { animation-delay: 1.1s; }
 .knowledge-field .graph-nodes circle:nth-child(8) { animation-delay: 1.8s; }
@@ -90,7 +94,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.22em;
-  opacity: 0.28;
+  opacity: 0.36;
   animation: label-breathe 7s ease-in-out infinite;
 }
 
@@ -99,13 +103,135 @@ a { color: inherit; text-decoration: none; }
 }
 
 @keyframes node-pulse {
-  0%, 100% { opacity: 0.32; transform: scale(0.86); }
-  50% { opacity: 0.92; transform: scale(1.06); }
+  0%, 100% { opacity: 0.40; transform: scale(0.86); }
+  50% { opacity: 1; transform: scale(1.10); }
 }
 
 @keyframes label-breathe {
-  0%, 100% { opacity: 0.18; }
-  50% { opacity: 0.38; }
+  0%, 100% { opacity: 0.24; }
+  50% { opacity: 0.48; }
+}
+
+.spectrum-sweep {
+  position: fixed;
+  inset: -30%;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(115deg,
+    transparent 20%,
+    rgba(0,212,255,0.07) 33%,
+    rgba(125,255,207,0.09) 41%,
+    rgba(255,180,107,0.10) 50%,
+    rgba(255,95,158,0.08) 59%,
+    rgba(124,92,255,0.07) 67%,
+    transparent 80%);
+  transform: translateX(-35%) skewX(-16deg);
+  animation: spectrum-sweep 10s cubic-bezier(.45,0,.25,1) infinite;
+}
+
+.meteor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.meteor {
+  position: absolute;
+  width: 170px;
+  height: 2px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: rotate(28deg) translate3d(-30vw, -30vh, 0);
+  background: linear-gradient(90deg, transparent, var(--meteor-color));
+  box-shadow: 0 0 14px var(--meteor-color);
+  animation: meteor-fly 7.5s linear infinite;
+}
+
+.meteor::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -2px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 12px var(--meteor-color);
+  transform: translateY(-50%);
+}
+
+.meteor--1 {
+  --meteor-color: #00d4ff;
+  top: -4vh;
+  left: -12vw;
+  animation-delay: 0s;
+}
+.meteor--2 {
+  --meteor-color: #ffb46b;
+  top: 8vh;
+  left: -24vw;
+  animation-delay: 1.7s;
+}
+.meteor--3 {
+  --meteor-color: #ff5f9e;
+  top: -8vh;
+  left: 12vw;
+  animation-delay: 3.1s;
+}
+.meteor--4 {
+  --meteor-color: #7dffcf;
+  top: 16vh;
+  left: -6vw;
+  animation-delay: 4.4s;
+}
+.meteor--5 {
+  --meteor-color: #7c5cff;
+  top: -2vh;
+  left: 38vw;
+  animation-delay: 5.6s;
+}
+.meteor--6 {
+  --meteor-color: #67e8f9;
+  top: 22vh;
+  left: 24vw;
+  animation-delay: 6.5s;
+}
+
+@keyframes spectrum-sweep {
+  0%, 54% {
+    opacity: 0;
+    transform: translateX(-35%) skewX(-16deg);
+  }
+  62% { opacity: 0.78; }
+  88% {
+    opacity: 0;
+    transform: translateX(35%) skewX(-16deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(35%) skewX(-16deg);
+  }
+}
+
+@keyframes meteor-fly {
+  0% {
+    opacity: 0;
+    transform: rotate(28deg) translate3d(-30vw, -30vh, 0);
+  }
+  4% { opacity: 1; }
+  22% { opacity: 0.75; }
+  34% {
+    opacity: 0;
+    transform: rotate(28deg) translate3d(120vw, 80vh, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(28deg) translate3d(120vw, 80vh, 0);
+  }
 }
 
 /* 网格背景 */
@@ -533,6 +659,8 @@ h1 {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .spectrum-sweep,
+  .meteor,
   .knowledge-field .graph-lines path,
   .knowledge-field .graph-nodes circle,
   .knowledge-field .graph-labels text {
