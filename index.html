@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>刘家浩 · 技术博客</title>
+  <meta name="description" content="刘家浩的个人技术博客，专注于 AI Agent 与 RAG 应用开发。">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="刘家浩 · 技术博客">
+  <meta property="og:description" content="保持热爱，奔赴山海。AI Agent 与 RAG 应用开发技术分享。">
+  <meta property="og:url" content="https://azusagwa.github.io/">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="aurora"></div>
+  <div class="bg-glow bg-glow--1"></div>
+  <div class="bg-glow bg-glow--2"></div>
+  <div class="bg-glow bg-glow--3"></div>
+  <div class="grid-overlay"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>刘家浩</span>
+      </a>
+      <a class="nav-github" href="https://github.com/Azusagwa" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="orbit" aria-hidden="true">
+        <span class="orbit-dot orbit-dot--1"></span>
+        <span class="orbit-dot orbit-dot--2"></span>
+        <span class="orbit-dot orbit-dot--3"></span>
+      </div>
+      <a class="avatar" href="mailto:2018106340@qq.com" aria-label="联系邮箱">
+        <img src="images/avatar.jpg" alt="刘家浩的头像">
+      </a>
+
+      <p class="eyebrow">AI APPLICATION ENGINEER · AGENT / RAG</p>
+      <p class="tagline" id="typing">保持热爱，奔赴山海。</p>
+      <p class="subline" id="subline-typing">专注于 AI Agent 与 RAG 应用开发，让大模型真正落地到工程场景。</p>
+      <div class="metrics">
+        <div class="metric"><span class="metric-num">AGENT</span><span class="metric-label">AI 智能体</span></div>
+        <div class="metric"><span class="metric-num">RAG</span><span class="metric-label">检索增强</span></div>
+        <div class="metric"><span class="metric-num">UAV</span><span class="metric-label">智能客服</span></div>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary btn-large glow-pulse" href="/blog.html">博客文章 →</a>
+        <button class="btn btn-ghost" id="wechat-btn" type="button" title="点击复制微信号">微信 18362889260</button>
+        <a class="btn btn-ghost" href="https://github.com/Azusagwa" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </section>
+
+    <section class="stack">
+      <p class="stack-label">TECH STACK · 技术栈</p>
+      <div class="stack-chips">
+        <span class="chip">Python</span>
+        <span class="chip">AI Agent</span>
+        <span class="chip">RAG</span>
+        <span class="chip">LLM 应用</span>
+        <span class="chip">Agentic Workflow</span>
+        <span class="chip">CANN 昇腾</span>
+        <span class="chip">知识库</span>
+        <span class="chip">工程落地</span>
+      </div>
+    </section>
+
+    <section class="terminal" aria-label="代码终端装饰">
+      <div class="terminal-bar">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+        <span class="terminal-title">azusagwa ~ rag-lab</span>
+      </div>
+      <div class="terminal-body">
+        <p><span class="term-prompt">$</span> agent init --stack python --rag hybrid</p>
+        <p><span class="term-ok">✓</span> knowledge base indexed <span class="term-dim"># 1,284 docs</span></p>
+        <p><span class="term-ok">✓</span> chain: retrieve → rerank → generate</p>
+        <p><span class="term-ok">✓</span> UAV customer-service agent online</p>
+        <p><span class="term-prompt">$</span> ask "Agentic RAG 怎么落地？"<span class="cursor">▍</span></p>
+      </div>
+    </section>
+
+    <section class="project">
+      <article class="project-card">
+        <span class="project-icon">⌗</span>
+        <div class="project-body">
+          <p class="project-label">精选项目</p>
+          <h2>CANN-RAG</h2>
+          <p class="project-desc">CANN 技术支持 Agent 项目</p>
+        </div>
+        <a class="project-link" href="https://github.com/Azusagwa/CANN-RAG" target="_blank" rel="noopener" aria-label="前往项目仓库">
+          <span>访问项目</span>
+          <span class="arrow">→</span>
+        </a>
+      </article>
+      <article class="project-card">
+        <span class="project-icon">✈</span>
+        <div class="project-body">
+          <p class="project-label">精选项目</p>
+          <h2>UAV-Intelligent-AI-CSS</h2>
+          <p class="project-desc">基于 Agentic RAG 的无人机智能 AI 客服系统</p>
+        </div>
+        <a class="project-link" href="https://github.com/Azusagwa/UAV-Intelligent-AI-CSS" target="_blank" rel="noopener" aria-label="前往项目仓库">
+          <span>访问项目</span>
+          <span class="arrow">→</span>
+        </a>
+      </article>
+      <article class="project-card">
+        <span class="project-icon">⚙</span>
+        <div class="project-body">
+          <p class="project-label">精选项目</p>
+          <h2>Device-Parameter-Extraction-Workflow</h2>
+          <p class="project-desc">元器件参数提取工作流</p>
+        </div>
+        <a class="project-link" href="https://github.com/Azusagwa/Device-Parameter-Extraction-Workflow" target="_blank" rel="noopener" aria-label="前往项目仓库">
+          <span>访问项目</span>
+          <span class="arrow">→</span>
+        </a>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> 刘家浩 · 保持热爱，奔赴山海</p>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // 点击复制微信号
+    (function () {
+      var btn = document.getElementById('wechat-btn');
+      var original = btn.textContent;
+      btn.addEventListener('click', function () {
+        var num = '18362889260';
+        function done() {
+          btn.textContent = '微信号已复制 ✓';
+          setTimeout(function () { btn.textContent = original; }, 1800);
+        }
+        function fallback() {
+          var ta = document.createElement('textarea');
+          ta.value = num;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(num).then(done, fallback);
+        } else {
+          fallback();
+        }
+      });
+    })();
+
+    // 打字机效果：感恩相遇，相遇即缘分。
+    (function () {
+      var el = document.getElementById('typing');
+      var full = el.textContent;
+      el.textContent = '';
+      var i = 0;
+      function type() {
+        if (i < full.length) {
+          el.textContent += full.charAt(i++);
+          setTimeout(type, 110);
+        }
+      }
+      type();
+    })();
+    // 打字机效果：专注于 AI Agent 与软件开发
+    (function () {
+      var el2 = document.getElementById('subline-typing');
+      var full2 = el2.textContent;
+      el2.textContent = '';
+      var j = 0;
+      function type2() {
+        if (j < full2.length) {
+          el2.textContent += full2.charAt(j++);
+          setTimeout(type2, 45);
+        }
+      }
+      type2();
+    })();
+
+    // 全屏流动粒子
+    (function () {
+      var canvas = document.getElementById('particles');
+      var ctx = canvas.getContext('2d');
+      var W, H, particles = [];
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      var N = 90;
+      for (var i = 0; i < N; i++) {
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          r: Math.random() * 1.8 + 0.4,
+          c: ['0,212,255', '124,92,255', '255,110,199', '255,255,255'][i % 4]
+        });
+      }
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < 0 || p.x > W) p.vx *= -1;
+          if (p.y < 0 || p.y > H) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + p.c + ',0.8)';
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+</body>
+</html>

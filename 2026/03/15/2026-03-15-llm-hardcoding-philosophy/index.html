@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>当AI写代码时，为什么它总是把配置写死在代码里？ | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="当AI写代码时，为什么它总是把配置写死在代码里？ 今天下午，我完成了Zotero LLM Bridge客户端的架构优化。看着屏幕上绿色的”All tests passed”提示，我的心情有些复杂。一方面，我为解决了一个技术问题感到欣慰；另一方面，我却陷入了一种更深的困惑：为什么这些由AI生成的代码，总是把配置信息硬编码在代码里？ 这不是我第一次遇到这个问题。在过去的几个月里，我与各种AI代码生成工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="当AI写代码时，为什么它总是把配置写死在代码里？">
+<meta property="og:url" content="http://example.com/2026/03/15/2026-03-15-llm-hardcoding-philosophy/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="当AI写代码时，为什么它总是把配置写死在代码里？ 今天下午，我完成了Zotero LLM Bridge客户端的架构优化。看着屏幕上绿色的”All tests passed”提示，我的心情有些复杂。一方面，我为解决了一个技术问题感到欣慰；另一方面，我却陷入了一种更深的困惑：为什么这些由AI生成的代码，总是把配置信息硬编码在代码里？ 这不是我第一次遇到这个问题。在过去的几个月里，我与各种AI代码生成工">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-11T08:03:57.773Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="ai-assisted-programming">
+<meta property="article:tag" content="architecture">
+<meta property="article:tag" content="hardcoding">
+<meta property="article:tag" content="human-ai-collaboration">
+<meta property="article:tag" content="llm">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2026-03-15-llm-hardcoding-philosophy" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/" class="article-date">
+  <time class="dt-published" datetime="2026-03-14T16:00:00.000Z" itemprop="datePublished">2026-03-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI%E7%BC%96%E7%A8%8B/">AI编程</a>►<a class="article-category-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/">软件架构</a>►<a class="article-category-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/%E4%BA%BA%E6%9C%BA%E5%8D%8F%E4%BD%9C/">人机协作</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      当AI写代码时，为什么它总是把配置写死在代码里？
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>当AI写代码时，为什么它总是把配置写死在代码里？</p>
+<p>今天下午，我完成了Zotero LLM Bridge客户端的架构优化。看着屏幕上绿色的”All tests passed”提示，我的心情有些复杂。一方面，我为解决了一个技术问题感到欣慰；另一方面，我却陷入了一种更深的困惑：为什么这些由AI生成的代码，总是把配置信息硬编码在代码里？</p>
+<p>这不是我第一次遇到这个问题。在过去的几个月里，我与各种AI代码生成工具协作完成了各种项目。每次审查AI生成的代码时，我总会发现那些熟悉的硬编码痕迹：端口号、API路径、超时设置、文件路径……它们像顽固的印记，深深刻在代码的逻辑中。</p>
+<h3 id="一次典型的清理工作"><a href="#一次典型的清理工作" class="headerlink" title="一次典型的清理工作"></a>一次典型的清理工作</h3><p>让我们看看Zotero项目中找到的几个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这是AI生成的一段典型代码</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ZoteroLocal</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="variable language_">self</span>.base_url = <span class="string">&quot;http://localhost:23124&quot;</span>  <span class="comment"># 硬编码的端口</span></span><br><span class="line">        <span class="variable language_">self</span>.api_prefix = <span class="string">&quot;/llm-bridge&quot;</span>  <span class="comment"># 硬编码的API路径</span></span><br><span class="line">        <span class="variable language_">self</span>.timeout = <span class="number">30</span>  <span class="comment"># 硬编码的超时时间</span></span><br><span class="line">        <span class="variable language_">self</span>.max_retries = <span class="number">3</span>  <span class="comment"># 硬编码的重试次数</span></span><br></pre></td></tr></table></figure>
+
+<p>看起来没问题，对吧？代码很清晰，功能也能工作。但问题在于，当用户的实际环境与这些假设不符时——比如Zotero运行在23119端口，或者API前缀是<code>/llm-bridge/v2</code>——整个系统就会崩溃。</p>
+<p>更微妙的是另一个例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 测试文件中的硬编码URL</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_connection</span>():</span><br><span class="line">    response = requests.get(<span class="string">&quot;http://localhost:23124/llm-bridge/health&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个测试代码假设Zotero总是运行在23124端口。如果端口变了，测试就会失败。但AI为什么不想想：如果这个值需要变化，它应该放在哪里？</p>
+<h3 id="硬编码的本质：AI的思维局限"><a href="#硬编码的本质：AI的思维局限" class="headerlink" title="硬编码的本质：AI的思维局限"></a>硬编码的本质：AI的思维局限</h3><p>当我深入思考这个问题时，我意识到硬编码反映了AI在编程中的几个根本性局限：</p>
+<p><strong>第一，AI缺乏环境的感知能力。</strong> AI不知道它的代码将在哪里运行。是在开发者的笔记本电脑上？在测试服务器上？在生产环境的容器里？AI没有这些上下文，所以它选择了最安全的假设：<code>localhost:23124</code>。</p>
+<p><strong>第二，AI倾向于解决眼前的问题。</strong> 当AI被要求”生成一个Zotero客户端”时，它的目标是生成一个”能工作”的客户端。配置的灵活性、部署的便利性、维护的可持续性——这些都不是它的首要目标。它的训练数据教会它的是：要让代码运行起来，把值直接写进去是最快的方式。</p>
+<p><strong>第三，AI难以处理抽象和具体之间的平衡。</strong> 好的架构需要在具体和抽象之间找到平衡点。太具体了（硬编码所有值），代码就失去了灵活性；太抽象了（把所有东西都参数化），代码就变得复杂难懂。AI在这方面的判断力还很有限。</p>
+<p>我记得有一次，我让AI为一个项目生成配置管理系统。它给出了一个非常复杂的方案：JSON配置文件、YAML覆盖、环境变量、命令行参数……层层叠加，像个俄罗斯套娃。我问它：”为什么不用简单的环境变量？”它回答：”因为需要支持所有可能的配置场景。”</p>
+<p>AI要么走向一个极端（硬编码所有东西），要么走向另一个极端（过度设计配置系统），它很难找到那个恰到好处的中间点，因为这个中间点是由开发者根据项目实际去判断的，而AI很难洞察我们的实际需求，因为在实际开发过程中我们也可能不知道这个度在哪里。</p>
+<h3 id="人类的独特价值：看到AI看不到的东西"><a href="#人类的独特价值：看到AI看不到的东西" class="headerlink" title="人类的独特价值：看到AI看不到的东西"></a>人类的独特价值：看到AI看不到的东西</h3><p>在项目优化中，开发者价值不在于写出了更好的代码，而在于看到了AI看不到的东西：</p>
+<p><strong>看系统的边界。</strong> 知道这个客户端将被不同的人在不同的环境中使用。有的用户Zotero运行在默认端口23119，有的用户改成了23124，还有的用户可能运行在Docker容器里。AI只看到了”Zotero客户端”这个抽象概念，而我看到了它将在真实世界中遇到的具体情境。</p>
+<p><strong>看变化的方向。</strong> 知道端口可能会变，API路径可能会版本化，超时设置可能需要调整。AI只看到了当前的静态需求，而我看到了随着时间推移可能发生的变化。</p>
+<p><strong>看平衡点。</strong> 我并没有设计一个复杂的配置系统，而是实现了一个简单的三层优先级：命令行参数 &gt; 构造函数参数 &gt; 默认值。这给了用户足够的灵活性，又保持了代码的简洁性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 优化后的设计</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params"></span></span><br><span class="line"><span class="params">    self,</span></span><br><span class="line"><span class="params">    base_url: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="literal">None</span>,  <span class="comment"># 可以传入自定义URL</span></span></span><br><span class="line"><span class="params">    api_prefix: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="literal">None</span>,  <span class="comment"># 可以传入自定义API前缀</span></span></span><br><span class="line"><span class="params">    timeout: <span class="type">Optional</span>[<span class="built_in">int</span>] = <span class="literal">None</span>,  <span class="comment"># 可以自定义超时</span></span></span><br><span class="line"><span class="params">    max_retries: <span class="type">Optional</span>[<span class="built_in">int</span>] = <span class="literal">None</span>,  <span class="comment"># 可以自定义重试次数</span></span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="comment"># 使用传入的值，或者回退到合理的默认值</span></span><br><span class="line">    <span class="variable language_">self</span>.base_url = base_url <span class="keyword">or</span> <span class="string">&quot;http://localhost:23124&quot;</span></span><br><span class="line">    <span class="variable language_">self</span>.api_prefix = api_prefix <span class="keyword">or</span> <span class="string">&quot;/llm-bridge&quot;</span></span><br><span class="line">    <span class="variable language_">self</span>.timeout = timeout <span class="keyword">or</span> <span class="number">30</span></span><br><span class="line">    <span class="variable language_">self</span>.max_retries = max_retries <span class="keyword">or</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
+<p>这个设计并不复杂，但它解决了硬编码的核心问题：<strong>它承认了”我不知道你将如何使用这段代码”</strong>。</p>
+<h3 id="这不仅仅是技术问题"><a href="#这不仅仅是技术问题" class="headerlink" title="这不仅仅是技术问题"></a>这不仅仅是技术问题</h3><p>当我反思这个问题时，我意识到硬编码现象揭示了一个更深层的真相：<strong>编程不仅仅是写代码，更是做出取舍</strong>。</p>
+<p>AI擅长生成语法正确的代码片段，但它不擅长做出这些取舍：</p>
+<ul>
+<li>应该在简单性和灵活性之间如何平衡？</li>
+<li>应该为哪些变化做设计，忽略哪些变化？</li>
+<li>应该在什么时候抽象，什么时候具体？</li>
+</ul>
+<p>这些问题的答案取决于项目的具体情境、团队的工作方式、用户的期望、技术的演化方向……这些是AI难以理解和权衡的。</p>
+<p>这就是为什么在AI辅助编程的时代，人类开发者的角色不是变得不重要，而是变得更加重要。我们需要成为<strong>架构的导航者</strong>，引导AI生成符合实际需求的代码；我们需要成为<strong>质量的守门人</strong>，确保AI生成的代码不仅功能正确，而且架构合理；我们需要成为<strong>情境的翻译者</strong>，把我们理解的真实世界需求转化为AI能够处理的编程任务。</p>
+<h3 id="一种新的协作模式"><a href="#一种新的协作模式" class="headerlink" title="一种新的协作模式"></a>一种新的协作模式</h3><p>基于这次经验，我开始形成一种与AI协作的新模式：</p>
+<p><strong>第一阶段：让AI快速生成原型。</strong> 我会给AI一个具体的任务：”生成一个连接Zotero HTTP API的Python客户端”。AI会生成一个能工作的版本，很可能包含硬编码。</p>
+<p><strong>第二阶段：人工审查和提炼。</strong> 我会审查AI生成的代码，识别出其中的硬编码和过度简化。我会问自己：这段代码在哪些情境下会失败？它会如何演进？用户会如何使用它？</p>
+<p><strong>第三阶段：给AI明确的架构指导。</strong> 我会告诉AI：”重写这个客户端，让所有配置都可以通过参数传入，并提供合理的默认值。”或者更具体地：”实现一个配置系统，支持命令行参数、环境变量和构造函数参数，按优先级覆盖。”</p>
+<p><strong>第四阶段：迭代和精炼。</strong> AI根据我的指导生成新版本，我再次审查，如此反复，直到达到一个平衡点。</p>
+<p>这种模式的关键在于<strong>明确的分工</strong>：AI负责快速生成代码，我负责提供架构指导和情境理解。AI负责实现细节，我负责战略方向。</p>
+<h3 id="结语：走向真正的智能协作"><a href="#结语：走向真正的智能协作" class="headerlink" title="结语：走向真正的智能协作"></a>结语：走向真正的智能协作</h3><p>完成Zotero项目优化后，我有了一个新的认识：<strong>AI不会取代人类开发者，但会改变我们的工作方式</strong>。</p>
+<p>我们不再需要花费大量时间编写重复的样板代码，但我们需要花更多时间思考架构设计、情境理解和质量把控。我们不再是一个人在战斗，而是在与一个强大的代码生成助手协作。</p>
+<p>硬编码问题只是这个转变中的一个小小缩影。它提醒我们，在拥抱AI带来的效率提升的同时，我们不能放弃人类的独特优势：对真实世界的理解、对复杂情境的判断、对长期价值的考量。</p>
+<p>下次当你看到AI生成的代码中又出现了硬编码的<code>localhost:23124</code>时，不要只是想着”我需要修复这个bug”。想想这背后反映了AI的什么局限，以及你可以如何引导它生成更好的代码。</p>
+<p>因为最终，最好的代码不是AI写的，也不是人写的，而是人与AI协作写出来的。</p>
+<hr>
+<p><em>本文记录了一次Zotero项目优化中的观察与思考，探讨了AI辅助编程时代人类开发者的新角色。在技术快速演进的今天，保持对技术本质的思考，或许是我们不被技术淹没的最好方式。</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/15/2026-03-15-llm-hardcoding-philosophy/" data-id="cuid4qpUJbcnUJIZ2psmsF1RL" data-title="当AI写代码时，为什么它总是把配置写死在代码里？" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-assisted-programming/" rel="tag">ai-assisted-programming</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/architecture/" rel="tag">architecture</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hardcoding/" rel="tag">hardcoding</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/human-ai-collaboration/" rel="tag">human-ai-collaboration</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/llm/" rel="tag">llm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/">AI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90/">技术分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF/">技术趋势</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">职业发展</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/%E6%8A%80%E6%9C%AF%E9%9D%A2%E8%AF%95/">技术面试</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/">AI Agents</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/">Software Engineering</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/System-Design/">System Design</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/">AI编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/">软件架构</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/%E4%BA%BA%E6%9C%BA%E5%8D%8F%E4%BD%9C/">人机协作</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">系统编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8/">高性能服务器</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/CI-CD/">CI/CD</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/">Jekyll</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/">Web Automation</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/">Testing</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/Security/">Security</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/">Zotero</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/">API</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/">项目开发</a></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/">CLI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/AI%E6%99%BA%E8%83%BD%E4%BD%93/">AI智能体</a></li></ul></li></ul></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI%E9%9D%A2%E8%AF%95/" rel="tag">AI面试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-interface/" rel="tag">agent-interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-memory/" rel="tag">agent-memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agents/" rel="tag">ai agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-assisted-programming/" rel="tag">ai-assisted-programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aider/" rel="tag">aider</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthropic/" rel="tag">anthropic</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anti-bot/" rel="tag">anti-bot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/architecture/" rel="tag">architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asynchronous/" rel="tag">asynchronous</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation/" rel="tag">automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation-framework/" rel="tag">automation-framework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-devtools/" rel="tag">chrome-devtools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ci-cd/" rel="tag">ci&#x2F;cd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-code/" rel="tag">claude-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-mem/" rel="tag">claude-mem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cli-anything/" rel="tag">cli-anything</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coding-assistant/" rel="tag">coding-assistant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent-programming/" rel="tag">concurrent programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deployment/" rel="tag">deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed-systems/" rel="tag">distributed systems</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/engineering/" rel="tag">engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evolution/" rel="tag">evolution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/future-trends/" rel="tag">future-trends</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-actions/" rel="tag">github-actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hardcoding/" rel="tag">hardcoding</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/harness-engineering/" rel="tag">harness-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http-api/" rel="tag">http-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-ai-collaboration/" rel="tag">human-ai-collaboration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm/" rel="tag">llm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm-integration/" rel="tag">llm-integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/local-api/" rel="tag">local-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long-running-agents/" rel="tag">long-running agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-architecture/" rel="tag">memory-architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-system/" rel="tag">memory-system</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-session-coordination/" rel="tag">multi-session-coordination</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencode/" rel="tag">opencode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scheduler/" rel="tag">scheduler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serena/" rel="tag">serena</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sogou/" rel="tag">sogou</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/superpowers/" rel="tag">superpowers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/system-design/" rel="tag">system design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/task-management/" rel="tag">task-management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/testing/" rel="tag">testing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thread-pool/" rel="tag">thread pool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool-design/" rel="tag">tool-design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-automation/" rel="tag">web-automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-scraping/" rel="tag">web-scraping</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/workflow/" rel="tag">workflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zero-code/" rel="tag">zero-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zotero/" rel="tag">zotero</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" rel="tag">八股文</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" rel="tag">开发者学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" rel="tag">架构分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" rel="tag">设计规范</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" rel="tag">面试技巧</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">AI面试</a> <a href="/tags/agent-interface/" style="font-size: 10px;">agent-interface</a> <a href="/tags/agent-memory/" style="font-size: 10px;">agent-memory</a> <a href="/tags/ai-agents/" style="font-size: 13.33px;">ai agents</a> <a href="/tags/ai-agent/" style="font-size: 20px;">ai-agent</a> <a href="/tags/ai-assisted-programming/" style="font-size: 10px;">ai-assisted-programming</a> <a href="/tags/ai-native/" style="font-size: 10px;">ai-native</a> <a href="/tags/aider/" style="font-size: 10px;">aider</a> <a href="/tags/anthropic/" style="font-size: 13.33px;">anthropic</a> <a href="/tags/anti-bot/" style="font-size: 10px;">anti-bot</a> <a href="/tags/architecture/" style="font-size: 13.33px;">architecture</a> <a href="/tags/asynchronous/" style="font-size: 10px;">asynchronous</a> <a href="/tags/automation/" style="font-size: 16.67px;">automation</a> <a href="/tags/automation-framework/" style="font-size: 10px;">automation-framework</a> <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/blog-deployment/" style="font-size: 10px;">blog deployment</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/chrome-devtools/" style="font-size: 10px;">chrome-devtools</a> <a href="/tags/ci-cd/" style="font-size: 10px;">ci/cd</a> <a href="/tags/claude-code/" style="font-size: 16.67px;">claude-code</a> <a href="/tags/claude-mem/" style="font-size: 10px;">claude-mem</a> <a href="/tags/cli-anything/" style="font-size: 10px;">cli-anything</a> <a href="/tags/coding-assistant/" style="font-size: 10px;">coding-assistant</a> <a href="/tags/concurrent-programming/" style="font-size: 10px;">concurrent programming</a> <a href="/tags/deployment/" style="font-size: 10px;">deployment</a> <a href="/tags/distributed-systems/" style="font-size: 10px;">distributed systems</a> <a href="/tags/engineering/" style="font-size: 10px;">engineering</a> <a href="/tags/evolution/" style="font-size: 10px;">evolution</a> <a href="/tags/front-matter/" style="font-size: 10px;">front matter</a> <a href="/tags/future-trends/" style="font-size: 10px;">future-trends</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github-actions/" style="font-size: 10px;">github-actions</a> <a href="/tags/hardcoding/" style="font-size: 10px;">hardcoding</a> <a href="/tags/harness-engineering/" style="font-size: 10px;">harness-engineering</a> <a href="/tags/http-api/" style="font-size: 13.33px;">http-api</a> <a href="/tags/human-ai-collaboration/" style="font-size: 10px;">human-ai-collaboration</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/jekyll/" style="font-size: 13.33px;">jekyll</a> <a href="/tags/llm/" style="font-size: 10px;">llm</a> <a href="/tags/llm-integration/" style="font-size: 13.33px;">llm-integration</a> <a href="/tags/local-api/" style="font-size: 10px;">local-api</a> <a href="/tags/long-running-agents/" style="font-size: 10px;">long-running agents</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/memory-architecture/" style="font-size: 10px;">memory-architecture</a> <a href="/tags/memory-system/" style="font-size: 10px;">memory-system</a> <a href="/tags/multi-session-coordination/" style="font-size: 10px;">multi-session-coordination</a> <a href="/tags/openai/" style="font-size: 13.33px;">openai</a> <a href="/tags/opencode/" style="font-size: 10px;">opencode</a> <a href="/tags/parsing-error/" style="font-size: 10px;">parsing error</a> <a href="/tags/playwright/" style="font-size: 10px;">playwright</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/scheduler/" style="font-size: 10px;">scheduler</a> <a href="/tags/serena/" style="font-size: 10px;">serena</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software engineering</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software-engineering</a> <a href="/tags/sogou/" style="font-size: 10px;">sogou</a> <a href="/tags/spec-driven-development/" style="font-size: 10px;">spec-driven-development</a> <a href="/tags/superpowers/" style="font-size: 10px;">superpowers</a> <a href="/tags/system-design/" style="font-size: 13.33px;">system design</a> <a href="/tags/task-management/" style="font-size: 10px;">task-management</a> <a href="/tags/testing/" style="font-size: 13.33px;">testing</a> <a href="/tags/thread-pool/" style="font-size: 10px;">thread pool</a> <a href="/tags/tool-design/" style="font-size: 10px;">tool-design</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web-automation/" style="font-size: 10px;">web-automation</a> <a href="/tags/web-scraping/" style="font-size: 10px;">web-scraping</a> <a href="/tags/workflow/" style="font-size: 13.33px;">workflow</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/zero-code/" style="font-size: 10px;">zero-code</a> <a href="/tags/zotero/" style="font-size: 16.67px;">zotero</a> <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" style="font-size: 10px;">八股文</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">开发者学习</a> <a href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" style="font-size: 10px;">架构分析</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" style="font-size: 10px;">设计规范</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" style="font-size: 10px;">面试技巧</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/03/17/2026-03-17-dancing-with-eight-part-essay-interviews-in-ai-era/">大模型时代下，开发者如何与&#34;八股文&#34;面试共舞？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/">CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/">当AI写代码时，为什么它总是把配置写死在代码里？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/13/2026-03-13-zotero-local-data-modification-gui-scripts-http-api/">打破 Zotero 的本地数据修改壁垒——从 GUI 脚本到 HTTP API 的探索之路</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Spec-Driven Development, 12个反直觉发现与AI原生开发启示 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Spec-Driven Development：12个反直觉发现与AI原生开发启示来源： 知乎文章关于SDD实践的总结（Martin Fowler团队警告与12个反直觉发现） 背景：权威警告与反直觉实践2025年底，Martin Fowler团队的Birgitta Böckeler发表了对SDD工具的深度评测，用德语词”Verschlimmbesserung”（越改越坏）警告SDD的过度工程化风险">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spec-Driven Development, 12个反直觉发现与AI原生开发启示">
+<meta property="og:url" content="http://example.com/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Spec-Driven Development：12个反直觉发现与AI原生开发启示来源： 知乎文章关于SDD实践的总结（Martin Fowler团队警告与12个反直觉发现） 背景：权威警告与反直觉实践2025年底，Martin Fowler团队的Birgitta Böckeler发表了对SDD工具的深度评测，用德语词”Verschlimmbesserung”（越改越坏）警告SDD的过度工程化风险">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-11T08:03:57.743Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="ai-native">
+<meta property="article:tag" content="best-practices">
+<meta property="article:tag" content="software-engineering">
+<meta property="article:tag" content="spec-driven-development">
+<meta property="article:tag" content="testing">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2026-03-05-spec-driven-development-12-anti-intuitive-insights" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI/">AI</a>►<a class="article-category-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Spec-Driven Development, 12个反直觉发现与AI原生开发启示
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Spec-Driven-Development：12个反直觉发现与AI原生开发启示"><a href="#Spec-Driven-Development：12个反直觉发现与AI原生开发启示" class="headerlink" title="Spec-Driven Development：12个反直觉发现与AI原生开发启示"></a>Spec-Driven Development：12个反直觉发现与AI原生开发启示</h2><p><strong>来源：</strong> 知乎文章关于SDD实践的总结（Martin Fowler团队警告与12个反直觉发现）</p>
+<h3 id="背景：权威警告与反直觉实践"><a href="#背景：权威警告与反直觉实践" class="headerlink" title="背景：权威警告与反直觉实践"></a>背景：权威警告与反直觉实践</h3><p>2025年底，Martin Fowler团队的Birgitta Böckeler发表了对SDD工具的深度评测，用德语词”Verschlimmbesserung”（越改越坏）警告SDD的过度工程化风险。ThoughtWorks作为全球受尊敬的软件咨询公司，其”技术雷达”影响广泛，这一警告引起了SDD社区的关注。</p>
+<p>作者通过两个月实践SDD（从Spec Kit到OpenSpec到Superpowers）以及多个AI原生端到端开发项目，总结了12个大部分违反最初直觉的发现。这些发现揭示了AI原生开发的最佳实践不是”选对工具”，而是”建立正确的人机协作模式”——人做决策，AI做执行，测试做验证。</p>
+<p>这些反直觉发现可分为三类。在Spec设计上，200行Spec比2000行更有效，因为过长Spec导致AI选择性执行，优先遵守文件开头指令；可执行命令比描述性文字有效10倍，跳过自然语言理解损耗；”不做什么”比”做什么”更重要，禁止清单防止灾难性错误；模糊的高层指令有时比精确的低层指令更好，给AI留出设计空间调用训练数据中的最佳实践。</p>
+<p>在工作流方面，测试比规范更重要，测试作为”结果的验证”比”意图的表达”更可靠；Vibe Coding不该被抛弃，原型阶段需要快速验证可行性而非流程负担；审查Spec比审查代码更累，因为代码有工具辅助验证而Spec全靠人脑判断；AI的第一版通常最好，反复修改导致代码”补丁叠补丁”退化，重新生成比反复修改更高效。</p>
+<p>在人机协作上，AI会”偷懒”但不会”反抗”，在指令模糊时选择最省力路径；安全是AI的盲区而非强项，需要显式安全要求清单和自动扫描；最佳工作模式是”人机交替”而非”AI自治”，每个交替周期控制在可审查粒度内；写Spec的能力比选工具重要10倍，同样工具下会写Spec工程师产出质量差距达5-10倍。</p>
+<h3 id="思考：AI时代软件工程的范式重构"><a href="#思考：AI时代软件工程的范式重构" class="headerlink" title="思考：AI时代软件工程的范式重构"></a>思考：AI时代软件工程的范式重构</h3><p>Martin Fowler的警告揭示了SDD工具过度工程化的风险，但更深层的真相是：我们正在见证软件工程范式的根本性重构。这种重构不仅关乎工具选择，更关乎工程师角色、工作模式和价值链的全面转变。未来的工程师主要工作不再是编写代码，而是设计能让AI高效、可靠、一致工作的系统框架，包括环境设计、意图定义、约束编码、反馈回路构建等高抽象层工作。工程师需要思考的不再是”我如何写出好代码”，而是”我如何设计出让AI能持续产出好代码的系统”，角色正在从编码者重构为系统设计师。</p>
+<p>与此同时，AI开发的工作模式正在从单次会话的临时交互演进为需要长期记忆和上下文管理的持久协作。这要求建立持久的、可检索的知识库系统，让AI能记住项目历史、设计决策和技术约束，在跨会话中保持连贯性。复杂任务需要从单个AI执行演进为多AI专业化协作，引入调度器机制分解任务、分配专家、管理依赖关系。这种演进反映了从临时工具使用到持续协作伙伴关系的转变。</p>
+<p>验证文化也发生了根本转变，从传统的依赖详细规范和人工审查，转向以客观测试为核心的验证机制。测试作为可执行的验证工具，比主观、易误解的规范描述更可靠。自动化安全扫描、代码分析、性能测试成为必须而非可选，这体现了从”相信规范”到”相信测试”的范式转变。AI原生开发的采用也必然是渐进式的，根据项目阶段需要采用不同工作深度：原型探索阶段需要Vibe Coding的快速验证能力，可行性确认后引入轻量Spec建立基本约束，工程化阶段采用完整SDD确保质量一致性。这种渐进式演进承认了不同任务的不同复杂度需求。</p>
+<p>安全与信任面临新挑战，AI生成的代码不能天然被信任，安全必须成为显式、强制的要求而非隐含期望。线程安全、输入验证、路径遍历防护等安全关注点需要明确编码进约束系统，配合自动化扫描工具和人工审查。这些变化共同催生了新的技能体系，AI时代工程师的核心竞争力从编程语言熟练度转向Spec设计能力、系统框架设计能力、测试策略制定能力、安全要求定义能力、人机协作流程设计能力。这些”软技能”将决定工程师在AI时代的价值和产出效率。</p>
+<p>最终的启示是：AI原生开发不是简单地把传统工作流程”AI化”，而是重新思考软件工程的本质。当代码实现不再是瓶颈，人类的独特价值就转移到更高层次的思考：战略规划、系统设计、约束定义、验证机制、协作流程。这才是AI时代软件工程的新边疆——不是与AI竞争写代码，而是设计出让AI能发挥最大价值的工作系统。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/" data-id="cuidnwV1Z35pcYVeb7IBiFVgZ" data-title="Spec-Driven Development, 12个反直觉发现与AI原生开发启示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/testing/" rel="tag">testing</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/03/05/2026-03-05-ai-agent-tool-design-lessons-from-building-claude-code/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          AI Agent工具设计，Claude Code构建经验总结
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2026/03/04/2026-03-04-fixing-github-actions-deprecation-errors/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">修复GitHub Actions弃用错误</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/">AI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90/">技术分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF/">技术趋势</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">职业发展</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/%E6%8A%80%E6%9C%AF%E9%9D%A2%E8%AF%95/">技术面试</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/">AI Agents</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/">Software Engineering</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/System-Design/">System Design</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/">AI编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/">软件架构</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/%E4%BA%BA%E6%9C%BA%E5%8D%8F%E4%BD%9C/">人机协作</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">系统编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8/">高性能服务器</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/CI-CD/">CI/CD</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/">Jekyll</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/">Web Automation</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/">Testing</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/Security/">Security</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/">Zotero</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/">API</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/">项目开发</a></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/">CLI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/AI%E6%99%BA%E8%83%BD%E4%BD%93/">AI智能体</a></li></ul></li></ul></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI%E9%9D%A2%E8%AF%95/" rel="tag">AI面试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-interface/" rel="tag">agent-interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-memory/" rel="tag">agent-memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agents/" rel="tag">ai agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-assisted-programming/" rel="tag">ai-assisted-programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aider/" rel="tag">aider</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthropic/" rel="tag">anthropic</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anti-bot/" rel="tag">anti-bot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/architecture/" rel="tag">architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asynchronous/" rel="tag">asynchronous</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation/" rel="tag">automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation-framework/" rel="tag">automation-framework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-devtools/" rel="tag">chrome-devtools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ci-cd/" rel="tag">ci&#x2F;cd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-code/" rel="tag">claude-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-mem/" rel="tag">claude-mem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cli-anything/" rel="tag">cli-anything</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coding-assistant/" rel="tag">coding-assistant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent-programming/" rel="tag">concurrent programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deployment/" rel="tag">deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed-systems/" rel="tag">distributed systems</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/engineering/" rel="tag">engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evolution/" rel="tag">evolution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/future-trends/" rel="tag">future-trends</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-actions/" rel="tag">github-actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hardcoding/" rel="tag">hardcoding</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/harness-engineering/" rel="tag">harness-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http-api/" rel="tag">http-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-ai-collaboration/" rel="tag">human-ai-collaboration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm/" rel="tag">llm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm-integration/" rel="tag">llm-integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/local-api/" rel="tag">local-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long-running-agents/" rel="tag">long-running agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-architecture/" rel="tag">memory-architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-system/" rel="tag">memory-system</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-session-coordination/" rel="tag">multi-session-coordination</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencode/" rel="tag">opencode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scheduler/" rel="tag">scheduler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serena/" rel="tag">serena</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sogou/" rel="tag">sogou</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/superpowers/" rel="tag">superpowers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/system-design/" rel="tag">system design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/task-management/" rel="tag">task-management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/testing/" rel="tag">testing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thread-pool/" rel="tag">thread pool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool-design/" rel="tag">tool-design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-automation/" rel="tag">web-automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-scraping/" rel="tag">web-scraping</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/workflow/" rel="tag">workflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zero-code/" rel="tag">zero-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zotero/" rel="tag">zotero</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" rel="tag">八股文</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" rel="tag">开发者学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" rel="tag">架构分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" rel="tag">设计规范</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" rel="tag">面试技巧</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">AI面试</a> <a href="/tags/agent-interface/" style="font-size: 10px;">agent-interface</a> <a href="/tags/agent-memory/" style="font-size: 10px;">agent-memory</a> <a href="/tags/ai-agents/" style="font-size: 13.33px;">ai agents</a> <a href="/tags/ai-agent/" style="font-size: 20px;">ai-agent</a> <a href="/tags/ai-assisted-programming/" style="font-size: 10px;">ai-assisted-programming</a> <a href="/tags/ai-native/" style="font-size: 10px;">ai-native</a> <a href="/tags/aider/" style="font-size: 10px;">aider</a> <a href="/tags/anthropic/" style="font-size: 13.33px;">anthropic</a> <a href="/tags/anti-bot/" style="font-size: 10px;">anti-bot</a> <a href="/tags/architecture/" style="font-size: 13.33px;">architecture</a> <a href="/tags/asynchronous/" style="font-size: 10px;">asynchronous</a> <a href="/tags/automation/" style="font-size: 16.67px;">automation</a> <a href="/tags/automation-framework/" style="font-size: 10px;">automation-framework</a> <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/blog-deployment/" style="font-size: 10px;">blog deployment</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/chrome-devtools/" style="font-size: 10px;">chrome-devtools</a> <a href="/tags/ci-cd/" style="font-size: 10px;">ci/cd</a> <a href="/tags/claude-code/" style="font-size: 16.67px;">claude-code</a> <a href="/tags/claude-mem/" style="font-size: 10px;">claude-mem</a> <a href="/tags/cli-anything/" style="font-size: 10px;">cli-anything</a> <a href="/tags/coding-assistant/" style="font-size: 10px;">coding-assistant</a> <a href="/tags/concurrent-programming/" style="font-size: 10px;">concurrent programming</a> <a href="/tags/deployment/" style="font-size: 10px;">deployment</a> <a href="/tags/distributed-systems/" style="font-size: 10px;">distributed systems</a> <a href="/tags/engineering/" style="font-size: 10px;">engineering</a> <a href="/tags/evolution/" style="font-size: 10px;">evolution</a> <a href="/tags/front-matter/" style="font-size: 10px;">front matter</a> <a href="/tags/future-trends/" style="font-size: 10px;">future-trends</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github-actions/" style="font-size: 10px;">github-actions</a> <a href="/tags/hardcoding/" style="font-size: 10px;">hardcoding</a> <a href="/tags/harness-engineering/" style="font-size: 10px;">harness-engineering</a> <a href="/tags/http-api/" style="font-size: 13.33px;">http-api</a> <a href="/tags/human-ai-collaboration/" style="font-size: 10px;">human-ai-collaboration</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/jekyll/" style="font-size: 13.33px;">jekyll</a> <a href="/tags/llm/" style="font-size: 10px;">llm</a> <a href="/tags/llm-integration/" style="font-size: 13.33px;">llm-integration</a> <a href="/tags/local-api/" style="font-size: 10px;">local-api</a> <a href="/tags/long-running-agents/" style="font-size: 10px;">long-running agents</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/memory-architecture/" style="font-size: 10px;">memory-architecture</a> <a href="/tags/memory-system/" style="font-size: 10px;">memory-system</a> <a href="/tags/multi-session-coordination/" style="font-size: 10px;">multi-session-coordination</a> <a href="/tags/openai/" style="font-size: 13.33px;">openai</a> <a href="/tags/opencode/" style="font-size: 10px;">opencode</a> <a href="/tags/parsing-error/" style="font-size: 10px;">parsing error</a> <a href="/tags/playwright/" style="font-size: 10px;">playwright</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/scheduler/" style="font-size: 10px;">scheduler</a> <a href="/tags/serena/" style="font-size: 10px;">serena</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software engineering</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software-engineering</a> <a href="/tags/sogou/" style="font-size: 10px;">sogou</a> <a href="/tags/spec-driven-development/" style="font-size: 10px;">spec-driven-development</a> <a href="/tags/superpowers/" style="font-size: 10px;">superpowers</a> <a href="/tags/system-design/" style="font-size: 13.33px;">system design</a> <a href="/tags/task-management/" style="font-size: 10px;">task-management</a> <a href="/tags/testing/" style="font-size: 13.33px;">testing</a> <a href="/tags/thread-pool/" style="font-size: 10px;">thread pool</a> <a href="/tags/tool-design/" style="font-size: 10px;">tool-design</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web-automation/" style="font-size: 10px;">web-automation</a> <a href="/tags/web-scraping/" style="font-size: 10px;">web-scraping</a> <a href="/tags/workflow/" style="font-size: 13.33px;">workflow</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/zero-code/" style="font-size: 10px;">zero-code</a> <a href="/tags/zotero/" style="font-size: 16.67px;">zotero</a> <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" style="font-size: 10px;">八股文</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">开发者学习</a> <a href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" style="font-size: 10px;">架构分析</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" style="font-size: 10px;">设计规范</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" style="font-size: 10px;">面试技巧</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/03/17/2026-03-17-dancing-with-eight-part-essay-interviews-in-ai-era/">大模型时代下，开发者如何与&#34;八股文&#34;面试共舞？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/">CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/">当AI写代码时，为什么它总是把配置写死在代码里？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/13/2026-03-13-zotero-local-data-modification-gui-scripts-http-api/">打破 Zotero 的本地数据修改壁垒——从 GUI 脚本到 HTTP API 的探索之路</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

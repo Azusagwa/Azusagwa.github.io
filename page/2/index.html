@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-2026-03-05-claude-mem-future-agent-memory-architecture" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-claude-mem-future-agent-memory-architecture/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI/">AI</a>►<a class="article-category-link" href="/categories/AI/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/05/2026-03-05-claude-mem-future-agent-memory-architecture/">Claude-mem与未来Agent记忆架构分析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题背景：跨会话上下文丢失"><a href="#问题背景：跨会话上下文丢失" class="headerlink" title="问题背景：跨会话上下文丢失"></a>问题背景：跨会话上下文丢失</h2><p>Claude Code 用户在每次断开连接后都会面临代理”失忆”问题——项目架构、重构决策、调试发现等上下文全部丢失，导致需要重复解释背景、消耗 token 并打断开发连续性。手动维护 CLAUDE.md 或笔记的方法既脆弱又耗时，无法完整捕捉开发历史。</p>
+<h2 id="Claude-mem-的解决方案"><a href="#Claude-mem-的解决方案" class="headerlink" title="Claude-mem 的解决方案"></a>Claude-mem 的解决方案</h2><p>Claude-mem 是一个开源插件，通过长期记忆存储和压缩机制解决跨会话上下文丢失。其核心设计基于”自动记录、整理总结、按需查找”原则：自动捕获所有工具调用的关键信息，将原始输出从上千 token 整理成约 500 token 的简短摘要，并通过 MCP 工具实现分三步查找（先搜索列表→再看时间线→最后查看详细信息），仅在需要时加载相关上下文。</p>
+<p>系统架构包含生命周期钩子（SessionStart、UserPromptSubmit 等）、运行在端口 37777 的 Worker 服务、本地 SQLite 数据库（支持全文搜索）以及 MCP 搜索工具。工作流程从会话开始时注入最近上下文，到捕获工具执行、提取学习要点，最终生成会话摘要为下次使用做准备。</p>
+<p>关键技术包括分三步查找以既找到相关信息又不浪费 token、为项目目录自动生成 CLAUDE.md 文件（用户内容在系统标签外保留）、通过 <code>&lt;private&gt;</code> 标签保护敏感信息不被记录，以及测试版的无尽模式——通过实时压缩将 token 使用量减少约 95%，支持约 1,000 次工具调用。相比手动维护上下文，这套机制在单个会话中可节省约 2,250 token，效率提升接近一个数量级，且所有数据完全存储在本地，安装后自动运行。</p>
+<h2 id="架构思考：从固定记忆到灵活调度的演进"><a href="#架构思考：从固定记忆到灵活调度的演进" class="headerlink" title="架构思考：从固定记忆到灵活调度的演进"></a>架构思考：从固定记忆到灵活调度的演进</h2><p>未来的 agent 系统应采用调度器驱动的灵活记忆系统，让记忆从固定不变的内容变成可以灵活使用的资源。调度器分析用户需求，将复杂任务拆解为独立的子任务，分配给前端、后端、调试等专业化的 agent 执行，并管理这些任务之间的依赖关系。当某个 agent 开始工作时，调度器会根据任务类型、涉及的文件、时间顺序等具体因素，从记忆库中搜索并提取最相关的历史记录，组合成适合当前 agent 使用的提示。如果任务因为上下文过长或包含错误信息而失败，调度器会自动移除重复或不必要的部分，排除有问题的记录，或者将任务拆分成更小的步骤重新分配给其他 agent 执行。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>Claude-mem 为解决 agent 跨会话记忆问题提供了重要技术基础——自动记录、整理总结、分层查找等方法证明了长期记忆是可行的。然而，真正的进步在于把记忆管理从单个 agent 的工作中分离出来，交给专门的调度系统来处理。未来的 agent 架构应该让记忆和执行分开，由调度器负责拆分任务、分配给专业 agent，让系统能自动调整记忆内容和处理失败情况。</p>
+<p>这种调度器驱动的架构更接近人类团队协作模式，调度器像项目经理一样分解任务、分配专家、管理记忆，而专业 agent 则专注于各自领域的工作。这不仅是技术改进，更是思考方式的根本改变，目标是构建能够像人类团队一样协作、学习、适应复杂任务的 agent 系统，让记忆成为可以按需调用的有用资源而不是负担。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-claude-mem-future-agent-memory-architecture/" data-id="cuidnq6kkAdu52ZA2VvDB3QdU" data-title="Claude-mem与未来Agent记忆架构分析" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/agent-memory/" rel="tag">agent-memory</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/claude-mem/" rel="tag">claude-mem</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/memory-architecture/" rel="tag">memory-architecture</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/scheduler/" rel="tag">scheduler</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-05-sogou-cpp-workflow-thrdpool-design-analysis" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-sogou-cpp-workflow-thrdpool-design-analysis/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">系统编程</a>►<a class="article-category-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8/">高性能服务器</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/05/2026-03-05-sogou-cpp-workflow-thrdpool-design-analysis/">Sogou C++ Workflow线程池(thrdpool)设计深度解析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Sogou C++ Workflow是搜狗公司开源的高性能异步编程框架，广泛应用于企业级后端服务开发。其内核层(<code>src/kernel/</code>)提供了高效的任务调度和网络通信基础设施，其中线程池(<code>thrdpool</code>)作为计算任务执行的核心组件，承担着管理线程资源、调度任务执行的重要职责。</p>
+<p>本文将基于<code>workflow/src/kernel/thrdpool.c/h</code>源码以及相关分析文档，深入剖析thrdpool的设计思想、实现细节和性能优化策略。</p>
+<h2 id="线程池在Workflow架构中的位置"><a href="#线程池在Workflow架构中的位置" class="headerlink" title="线程池在Workflow架构中的位置"></a>线程池在Workflow架构中的位置</h2><p>在Workflow的组件分层架构中，thrdpool位于最底层的基础设施层，与Poller(I&#x2F;O多路复用)、msgqueue(消息队列)、Executor(计算执行器)等组件协同工作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    Workflow 任务系统                        │</span><br><span class="line">│  (SeriesWork, ParallelWork, WFGraphTask, WFTaskFactory)     │</span><br><span class="line">└─────────────────────────────┬───────────────────────────────┘</span><br><span class="line">                              │</span><br><span class="line">┌─────────────────────────────▼───────────────────────────────┐</span><br><span class="line">│                     CommRequest                           │</span><br><span class="line">│  (网络请求与任务系统的桥梁，继承 SubTask 和 CommSession)    │</span><br><span class="line">└─────────────────────────────┬───────────────────────────────┘</span><br><span class="line">                              │</span><br><span class="line">┌─────────────────────────────▼───────────────────────────────┐</span><br><span class="line">│                     CommScheduler                          │</span><br><span class="line">│        (资源调度器，封装 Communicator)                     │</span><br><span class="line">└─────────────────────────────┬───────────────────────────────┘</span><br><span class="line">                              │</span><br><span class="line">┌─────────────────────────────▼───────────────────────────────┐</span><br><span class="line">│                     Communicator                           │</span><br><span class="line">│      (网络通信核心，管理连接、数据传输、协议处理)           │</span><br><span class="line">└─────────────────────────────┬───────────────────────────────┘</span><br><span class="line">                              │</span><br><span class="line">┌─────────────┬───────────────┼───────────────┬───────────────┐</span><br><span class="line">│             │               │               │               │</span><br><span class="line">▼             ▼               ▼               ▼               ▼</span><br><span class="line">Executor     Poller        msgqueue       thrdpool     其他组件</span><br><span class="line">(计算任务) (I/O多路复用)  (消息队列)      (线程池)     (SleepRequest等)</span><br></pre></td></tr></table></figure>
+
+<h2 id="核心数据结构分析"><a href="#核心数据结构分析" class="headerlink" title="核心数据结构分析"></a>核心数据结构分析</h2><h3 id="1-线程池结构体-thrdpool"><a href="#1-线程池结构体-thrdpool" class="headerlink" title="1. 线程池结构体 __thrdpool"></a>1. 线程池结构体 <code>__thrdpool</code></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">thrdpool</span> &#123;</span></span><br><span class="line">    <span class="type">msgqueue_t</span> *msgqueue;      <span class="comment">// 任务队列</span></span><br><span class="line">    <span class="type">size_t</span> nthreads;          <span class="comment">// 当前线程数</span></span><br><span class="line">    <span class="type">size_t</span> stacksize;         <span class="comment">// 线程栈大小</span></span><br><span class="line">    <span class="type">pthread_t</span> tid;            <span class="comment">// 链式等待的线程ID</span></span><br><span class="line">    <span class="type">pthread_mutex_t</span> mutex;    <span class="comment">// 互斥锁</span></span><br><span class="line">    <span class="type">pthread_key_t</span> key;        <span class="comment">// 线程本地存储key</span></span><br><span class="line">    <span class="type">pthread_cond_t</span> *<span class="built_in">terminate</span>;<span class="comment">// 终止条件变量</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>关键字段说明：</p>
+<ul>
+<li><code>msgqueue</code>: 任务消息队列，采用双缓冲区设计，支持高效的生产者-消费者模式</li>
+<li><code>tid</code>: 用于实现”链式等待”优雅退出机制，记录上一个需要等待的线程ID</li>
+<li><code>key</code>: 线程特定数据key，用于判断线程是否属于当前线程池</li>
+<li><code>terminate</code>: 指向条件变量的指针，用于线程池终止时的同步</li>
+</ul>
+<h3 id="2-任务结构体-thrdpool-task"><a href="#2-任务结构体-thrdpool-task" class="headerlink" title="2. 任务结构体 thrdpool_task"></a>2. 任务结构体 <code>thrdpool_task</code></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">thrdpool_task</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> (*routine)(<span class="type">void</span> *);  <span class="comment">// 任务函数指针</span></span><br><span class="line">    <span class="type">void</span> *context;           <span class="comment">// 任务上下文数据</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>采用经典的函数指针+上下文的设计模式。</p>
+<h3 id="3-内部任务条目-thrdpool-task-entry"><a href="#3-内部任务条目-thrdpool-task-entry" class="headerlink" title="3. 内部任务条目 __thrdpool_task_entry"></a>3. 内部任务条目 <code>__thrdpool_task_entry</code></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> __<span class="title">thrdpool_task_entry</span> &#123;</span></span><br><span class="line">    <span class="type">void</span> *link;              <span class="comment">// 链表指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">thrdpool_task</span> <span class="title">task</span>;</span> <span class="comment">// 用户任务</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>内部使用该结构将任务包装为消息队列可管理的条目。</p>
+<h2 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h2><p>thrdpool提供了简洁而完备的C语言接口：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建线程池</span></span><br><span class="line"><span class="type">thrdpool_t</span> *<span class="title function_">thrdpool_create</span><span class="params">(<span class="type">size_t</span> nthreads, <span class="type">size_t</span> stacksize)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提交任务到线程池</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">thrdpool_schedule</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> thrdpool_task *task, <span class="type">thrdpool_t</span> *pool)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断当前线程是否在线程池中</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">thrdpool_in_pool</span><span class="params">(<span class="type">thrdpool_t</span> *pool)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 动态增加/减少线程</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">thrdpool_increase</span><span class="params">(<span class="type">thrdpool_t</span> *pool)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">thrdpool_decrease</span><span class="params">(<span class="type">thrdpool_t</span> *pool)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线程池退出</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">thrdpool_exit</span><span class="params">(<span class="type">thrdpool_t</span> *pool)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 销毁线程池</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">thrdpool_destroy</span><span class="params">(<span class="type">void</span> (*pending)(<span class="type">const</span> <span class="keyword">struct</span> thrdpool_task *),</span></span><br><span class="line"><span class="params">                      <span class="type">thrdpool_t</span> *pool)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>接口设计体现了几个重要原则：</p>
+<ol>
+<li><strong>资源管理明确</strong>: <code>create</code>&#x2F;<code>destroy</code>配对使用</li>
+<li><strong>任务提交简单</strong>: 只需函数指针和上下文</li>
+<li><strong>状态查询支持</strong>: 可判断线程是否在池中</li>
+<li><strong>动态调整能力</strong>: 支持运行时增减线程</li>
+<li><strong>优雅退出保障</strong>: 提供pending回调处理未完成任务</li>
+</ol>
+<h2 id="线程池创建流程"><a href="#线程池创建流程" class="headerlink" title="线程池创建流程"></a>线程池创建流程</h2><p><code>thrdpool_create()</code>函数的执行流程体现了严谨的资源管理策略：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">thrdpool_t</span> *<span class="title function_">thrdpool_create</span><span class="params">(<span class="type">size_t</span> nthreads, <span class="type">size_t</span> stacksize)</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 分配线程池结构体内存</span></span><br><span class="line">    pool = (<span class="type">thrdpool_t</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span> (<span class="type">thrdpool_t</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 创建消息队列</span></span><br><span class="line">    pool-&gt;msgqueue = msgqueue_create(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 初始化互斥锁和线程特定数据key</span></span><br><span class="line">    pthread_mutex_init(&amp;pool-&gt;mutex, <span class="literal">NULL</span>);</span><br><span class="line">    pthread_key_create(&amp;pool-&gt;key, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 设置参数</span></span><br><span class="line">    pool-&gt;stacksize = stacksize;</span><br><span class="line">    pool-&gt;nthreads = <span class="number">0</span>;</span><br><span class="line">    pool-&gt;tid = __zero_tid;</span><br><span class="line">    pool-&gt;<span class="built_in">terminate</span> = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 创建指定数量的线程</span></span><br><span class="line">    <span class="keyword">if</span> (__thrdpool_create_threads(nthreads, pool) &gt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> pool;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 6. 失败时清理资源</span></span><br><span class="line">    <span class="comment">// ... (资源清理代码)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建过程中的资源管理采用”反向释放”策略：每个资源成功分配后才分配下一个，失败时按相反顺序释放已分配资源。</p>
+<h2 id="任务调度机制"><a href="#任务调度机制" class="headerlink" title="任务调度机制"></a>任务调度机制</h2><h3 id="任务提交过程"><a href="#任务提交过程" class="headerlink" title="任务提交过程"></a>任务提交过程</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">thrdpool_schedule</span><span class="params">(<span class="type">const</span> <span class="keyword">struct</span> thrdpool_task *task, <span class="type">thrdpool_t</span> *pool)</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 分配任务条目内存</span></span><br><span class="line">    <span class="type">void</span> *buf = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span> (<span class="keyword">struct</span> __thrdpool_task_entry));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (buf)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 2. 内部调度函数</span></span><br><span class="line">        __thrdpool_schedule(task, buf, pool);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 内存分配失败</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> __thrdpool_schedule(<span class="type">const</span> <span class="keyword">struct</span> thrdpool_task *task, <span class="type">void</span> *buf,</span><br><span class="line">                         <span class="type">thrdpool_t</span> *pool) &#123;</span><br><span class="line">    <span class="comment">// 3. 填充任务数据</span></span><br><span class="line">    ((<span class="keyword">struct</span> __thrdpool_task_entry *)buf)-&gt;task = *task;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 放入消息队列</span></span><br><span class="line">    msgqueue_put(buf, pool-&gt;msgqueue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="工作线程执行循环"><a href="#工作线程执行循环" class="headerlink" title="工作线程执行循环"></a>工作线程执行循环</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> *__thrdpool_routine(<span class="type">void</span> *arg) &#123;</span><br><span class="line">    <span class="type">thrdpool_t</span> *pool = (<span class="type">thrdpool_t</span> *)arg;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> __<span class="title">thrdpool_task_entry</span> *<span class="title">entry</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置线程特定数据，标记为线程池线程</span></span><br><span class="line">    pthread_setspecific(pool-&gt;key, pool);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!pool-&gt;<span class="built_in">terminate</span>)  <span class="comment">// 检查终止标志</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 从消息队列获取任务</span></span><br><span class="line">        entry = (<span class="keyword">struct</span> __thrdpool_task_entry *)msgqueue_get(pool-&gt;msgqueue);</span><br><span class="line">        <span class="keyword">if</span> (!entry)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 提取任务函数和上下文</span></span><br><span class="line">        <span class="type">void</span> (*task_routine)(<span class="type">void</span> *) = entry-&gt;task.routine;</span><br><span class="line">        <span class="type">void</span> *task_context = entry-&gt;task.context;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 释放任务条目内存</span></span><br><span class="line">        <span class="built_in">free</span>(entry);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 执行任务</span></span><br><span class="line">        task_routine(task_context);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 检查线程池是否已被任务销毁</span></span><br><span class="line">        <span class="keyword">if</span> (pool-&gt;nthreads == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">free</span>(pool);  <span class="comment">// 线程池由任务销毁</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 正常退出流程</span></span><br><span class="line">    __thrdpool_exit_routine(pool);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="优雅退出机制：链式等待"><a href="#优雅退出机制：链式等待" class="headerlink" title="优雅退出机制：链式等待"></a>优雅退出机制：链式等待</h2><p>thrdpool最精妙的设计之一是它的优雅退出机制——“链式等待”。传统线程池需要记录所有线程ID以便join等待，而thrdpool采用了一种创新的递归等待策略。</p>
+<h3 id="链式等待原理"><a href="#链式等待原理" class="headerlink" title="链式等待原理"></a>链式等待原理</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> __thrdpool_exit_routine(<span class="type">void</span> *context) &#123;</span><br><span class="line">    <span class="type">thrdpool_t</span> *pool = (<span class="type">thrdpool_t</span> *)context;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* One thread joins another. Don&#x27;t need to keep all thread IDs. */</span></span><br><span class="line">    pthread_mutex_lock(&amp;pool-&gt;mutex);</span><br><span class="line">    tid = pool-&gt;tid;           <span class="comment">// 获取上一个线程ID</span></span><br><span class="line">    pool-&gt;tid = pthread_self(); <span class="comment">// 设置自己的ID供下一个线程等待</span></span><br><span class="line">    <span class="keyword">if</span> (--pool-&gt;nthreads == <span class="number">0</span> &amp;&amp; pool-&gt;<span class="built_in">terminate</span>)</span><br><span class="line">        pthread_cond_signal(pool-&gt;<span class="built_in">terminate</span>); <span class="comment">// 最后一个线程通知销毁者</span></span><br><span class="line"></span><br><span class="line">    pthread_mutex_unlock(&amp;pool-&gt;mutex);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!pthread_equal(tid, __zero_tid))</span><br><span class="line">        pthread_join(tid, <span class="literal">NULL</span>); <span class="comment">// 等待上一个线程</span></span><br><span class="line"></span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>链式等待的工作流程：</p>
+<ol>
+<li><strong>第一个退出的线程</strong>：发现<code>pool-&gt;tid</code>为<code>__zero_tid</code>(0值)，不需要等待任何线程，直接退出</li>
+<li><strong>后续退出的线程</strong>：发现<code>pool-&gt;tid</code>不为0，需要<code>pthread_join()</code>等待前一个线程</li>
+<li><strong>每个线程退出前</strong>：将自己的线程ID设置到<code>pool-&gt;tid</code>，供下一个线程等待</li>
+<li><strong>最后一个线程</strong>：递减<code>nthreads</code>为0时，通过<code>terminate</code>条件变量通知销毁发起者</li>
+</ol>
+<p>这种设计避免了维护所有线程ID列表的开销，实现了线程间的递归等待。</p>
+<h2 id="销毁线程池的特殊情况"><a href="#销毁线程池的特殊情况" class="headerlink" title="销毁线程池的特殊情况"></a>销毁线程池的特殊情况</h2><h3 id="外部销毁-vs-内部销毁"><a href="#外部销毁-vs-内部销毁" class="headerlink" title="外部销毁 vs 内部销毁"></a>外部销毁 vs 内部销毁</h3><p>thrdpool支持两种销毁发起方式：</p>
+<h4 id="1-外部销毁（常见情况）"><a href="#1-外部销毁（常见情况）" class="headerlink" title="1. 外部销毁（常见情况）"></a>1. 外部销毁（常见情况）</h4><p>由主线程或拥有线程池的模块发起，销毁完成后需要释放线程池内存。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">thrdpool_destroy</span><span class="params">(<span class="type">void</span> (*pending)(<span class="type">const</span> <span class="keyword">struct</span> thrdpool_task *),</span></span><br><span class="line"><span class="params">                      <span class="type">thrdpool_t</span> *pool)</span> &#123;</span><br><span class="line">    <span class="type">int</span> in_pool = thrdpool_in_pool(pool);</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">if</span> (!in_pool)  <span class="comment">// 外部销毁需要释放内存</span></span><br><span class="line">        <span class="built_in">free</span>(pool);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-内部销毁（高级特性）"><a href="#2-内部销毁（高级特性）" class="headerlink" title="2. 内部销毁（高级特性）"></a>2. 内部销毁（高级特性）</h4><p>允许线程池中的任务线程销毁自己所在的线程池，在某些工作流模式中非常有用。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> *__thrdpool_routine(<span class="type">void</span> *arg) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">if</span> (pool-&gt;nthreads == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/* Thread pool was destroyed by the task. */</span></span><br><span class="line">        <span class="built_in">free</span>(pool);  <span class="comment">// 内部任务销毁了线程池</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内部销毁的线程会将自己设置为分离状态(<code>pthread_detach</code>)，继续执行完当前任务后参与链式等待退出。</p>
+<h3 id="未完成任务处理"><a href="#未完成任务处理" class="headerlink" title="未完成任务处理"></a>未完成任务处理</h3><p>销毁线程池时，可能还有任务在队列中未执行。<code>thrdpool_destroy()</code>通过<code>pending</code>回调函数将这些任务返回给调用者：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">    entry = (<span class="keyword">struct</span> __thrdpool_task_entry *)msgqueue_get(pool-&gt;msgqueue);</span><br><span class="line">    <span class="keyword">if</span> (!entry)</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pending &amp;&amp; entry-&gt;task.routine != __thrdpool_exit_routine)</span><br><span class="line">        pending(&amp;entry-&gt;task);  <span class="comment">// 返回未执行任务</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(entry);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="性能优化特点"><a href="#性能优化特点" class="headerlink" title="性能优化特点"></a>性能优化特点</h2><h3 id="1-零拷贝任务传递"><a href="#1-零拷贝任务传递" class="headerlink" title="1. 零拷贝任务传递"></a>1. 零拷贝任务传递</h3><p>任务提交时只传递函数指针和上下文指针，任务执行时直接使用这些指针，避免数据复制。</p>
+<h3 id="2-高效的消息队列"><a href="#2-高效的消息队列" class="headerlink" title="2. 高效的消息队列"></a>2. 高效的消息队列</h3><p>使用<code>msgqueue</code>实现的双缓冲区队列，减少锁竞争，提高生产者和消费者的并发性能。</p>
+<h3 id="3-动态线程调整"><a href="#3-动态线程调整" class="headerlink" title="3. 动态线程调整"></a>3. 动态线程调整</h3><p>支持运行时动态增加(<code>thrdpool_increase</code>)和减少(<code>thrdpool_decrease</code>)线程数量，适应负载变化。</p>
+<h3 id="4-资源延迟初始化"><a href="#4-资源延迟初始化" class="headerlink" title="4. 资源延迟初始化"></a>4. 资源延迟初始化</h3><p>线程栈大小等参数在创建线程时才实际应用，避免不必要的资源预留。</p>
+<h3 id="5-无锁设计优化"><a href="#5-无锁设计优化" class="headerlink" title="5. 无锁设计优化"></a>5. 无锁设计优化</h3><p>在非竞争路径上尽量减少锁的使用，如任务执行过程完全无锁。</p>
+<h2 id="与Executor的集成"><a href="#与Executor的集成" class="headerlink" title="与Executor的集成"></a>与Executor的集成</h2><p>在Workflow的完整架构中，thrdpool通过Executor组件与上层任务系统集成。Executor将计算任务封装为<code>ExecRequest</code>，使用thrdpool执行具体的计算逻辑。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简化的集成示意</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExecRequest</span> :</span> public SubTask &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    virtual <span class="type">void</span> <span class="title function_">dispatch</span><span class="params">()</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 将任务提交到thrdpool执行</span></span><br><span class="line">        thrdpool_schedule(&amp;task, global_thrdpool);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这种设计实现了计算任务与I&#x2F;O任务的分离，避免了计算密集型任务阻塞网络事件循环。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Sogou C++ Workflow的thrdpool是一个设计精良的高性能线程池实现，其主要特点包括：</p>
+<ol>
+<li><strong>简洁的接口设计</strong>: 提供完整的生命周期管理接口</li>
+<li><strong>创新的链式等待</strong>: 优雅退出机制避免维护线程ID列表</li>
+<li><strong>灵活的资源管理</strong>: 支持动态调整和多种销毁方式</li>
+<li><strong>高效的并发性能</strong>: 零拷贝、双缓冲区队列等优化</li>
+<li><strong>健壮的错误处理</strong>: 完善的资源清理和未完成任务回调</li>
+</ol>
+<p>thrdpool的设计体现了现代C++系统编程的最佳实践：在提供简洁接口的同时，内部实现充分考虑性能、资源管理和异常安全。这种平衡使得Workflow能够满足企业级后端服务对高并发、低延迟的严格要求。</p>
+<p>作为Workflow内核的基础组件，thrdpool的稳定性和性能为上层异步任务系统提供了可靠的计算资源保障，是理解Workflow整体架构的重要切入点。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li>Sogou C++ Workflow 源码: <a target="_blank" rel="noopener" href="https://github.com/sogou/workflow">https://github.com/sogou/workflow</a></li>
+<li>workflow&#x2F;src&#x2F;kernel&#x2F;thrdpool.c&#x2F;h</li>
+<li>一个逻辑完备的线程池: <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/503733481">https://zhuanlan.zhihu.com/p/503733481</a></li>
+</ol>
+<hr>
+<p><em>本文由作者按照 CC BY 4.0 进行授权</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-sogou-cpp-workflow-thrdpool-design-analysis/" data-id="cuidgDQAY5DRaSITDKuYsCx8r" data-title="Sogou C++ Workflow线程池(thrdpool)设计深度解析" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/asynchronous/" rel="tag">asynchronous</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/concurrent-programming/" rel="tag">concurrent programming</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sogou/" rel="tag">sogou</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/thread-pool/" rel="tag">thread pool</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/workflow/" rel="tag">workflow</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-05-openai-harness-engineering-zero-code-experiment" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-openai-harness-engineering-zero-code-experiment/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI/">AI</a>►<a class="article-category-link" href="/categories/AI/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/05/2026-03-05-openai-harness-engineering-zero-code-experiment/">OpenAI Harness Engineering, 零人工代码实验的范式启示</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="OpenAI-Harness-Engineering：零人工代码实验的范式启示"><a href="#OpenAI-Harness-Engineering：零人工代码实验的范式启示" class="headerlink" title="OpenAI Harness Engineering：零人工代码实验的范式启示"></a>OpenAI Harness Engineering：零人工代码实验的范式启示</h2><p><strong>来源：</strong> OpenAI文章《Harness engineering: leveraging Codex in an agent-first world》（Ryan Lopopolo，2026-02-11）</p>
+<p><strong>分析日期：</strong> 2026年3月5日</p>
+<p>OpenAI团队进行了一项极端实验：在零人工手写代码的约束下，五个月内构建并交付了有真实用户的软件产品。他们估算交付速度提升了约10倍，代码库达百万行量级，合并约1500个PR。核心发现是：当软件工程的重心从”写代码”转向”设计环境、定义意图、构建反馈回路”时，工程实践发生根本性转变。</p>
+<p>这项实验展现了AI驱动开发的几个关键转变。工程师的角色从实现者变为系统设计师和杠杆构建者，主要任务变成”让Agent更容易做对事”。团队将应用运行时信号设计为Agent可直接理解的对象，支持按git worktree启动独立实例，将Chrome DevTools Protocol接入Agent运行时，让Codex能直接复现bug、验证修复。</p>
+<p>在知识管理上，他们放弃了庞大的AGENTS.md方案，转而构建结构化的docs&#x2F;目录，让AGENTS.md从”百科全书”降级为”目录页”。这种渐进式披露方法承认了上下文预算的稀缺性，让Agent按需深入而非开局被信息淹没。代码库以Agent可读性为首要目标，关键决策必须沉淀为仓库内可版本化工件。</p>
+<p>团队通过lint规则和结构测试将架构约束编码为可执行规范，约束不变量而非微观控制实现细节。在Agent吞吐远高于人类注意力的环境下，工程权衡被重新计算：PR生命周期更短，倾向于快速纠偏而非长期阻塞；技术债必须按天发现、按天修复。Codex已能端到端驱动新特性交付，从bug复现到修复、验证、PR处理全流程自主。</p>
+<hr>
+<h2 id="思考：Harness-Engineering的新范式"><a href="#思考：Harness-Engineering的新范式" class="headerlink" title="思考：Harness Engineering的新范式"></a>思考：Harness Engineering的新范式</h2><p>这项实验揭示了一个正在成形的新范式：软件工程正从”编码技艺”演变为”harness engineering”。传统的软件工程核心是编写代码的技巧，而harness engineering的核心是设计能让AI agent高效、可靠、一致地协作的系统。这包括环境设计、意图定义、反馈回路构建、约束编码等更高抽象层的工作。</p>
+<p>OpenAI实验展示了当AI agent在系统级协作时，环境设计成为比代码实现更关键的杠杆。仓库即事实来源的强制性、可执行架构约束、Agent可读性优先等原则，都是为了构建一个能长期自稳的系统。工程师的角色从实现者转变为系统设计师，主要任务是”让Agent更容易做对事”。</p>
+<p>这种转变也重新定义了工程权衡。在高吞吐的AI驱动开发中，等待完美测试通过可能比快速迭代并后续修复更昂贵；技术债必须像垃圾回收一样按天清理；人类注意力应集中在最有杠杆的地方——系统设计而非代码实现。仓库内的结构化知识、lint规则、可执行计划构成了动态上下文管理系统，这本质上是一个项目级的调度架构。</p>
+<p>未知依然存在：全Agent生成系统能否在多年尺度上维持架构一致性？人类判断在哪些环节杠杆最大？随着模型能力提升，现有控制系统将如何演化？但这些探索已经清晰表明：真正决定AI开发效率上限的，不是一次生成是否惊艳，而是你是否建立了能长期自稳、可持续复利的harness系统。</p>
+<p>未来最有效的工程团队，可能不是由最优秀的编码者组成，而是由最擅长设计AI协作环境、构建反馈回路、编码约束规则的”harness工程师”组成。他们思考的不是”我如何写出好代码”，而是”我如何设计出让AI能持续产出好代码的系统”。这是认知框架的根本转变，也是AI时代软件工程的新边疆。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-openai-harness-engineering-zero-code-experiment/" data-id="cuidD0GxqpnB84GsMeg0dKLIO" data-title="OpenAI Harness Engineering, 零人工代码实验的范式启示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/harness-engineering/" rel="tag">harness-engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/zero-code/" rel="tag">zero-code</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-05-ai-agent-tool-design-lessons-from-building-claude-code" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-ai-agent-tool-design-lessons-from-building-claude-code/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI/">AI</a>►<a class="article-category-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a>►<a class="article-category-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/05/2026-03-05-ai-agent-tool-design-lessons-from-building-claude-code/">AI Agent工具设计，Claude Code构建经验总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="提问能力的演进"><a href="#提问能力的演进" class="headerlink" title="提问能力的演进"></a>提问能力的演进</h2><p>提升代理的提问能力经历了多次迭代。最初在ExitPlanTool中增加问题参数时，代理对同时输出计划和问题感到困惑。随后改用修改后的Markdown格式输出，虽能较好遵守但格式不稳定。最终开发了专用的AskUserQuestion工具，允许代理在任意时刻调用，通过弹窗展示结构化问题并阻塞循环直到用户回答。该工具不仅稳定了输出格式，更重要的是代理”愿意”调用它。</p>
+<h2 id="工具随能力变化"><a href="#工具随能力变化" class="headerlink" title="工具随能力变化"></a>工具随能力变化</h2><p>随着代理能力提升，工具需求也在演变。早期需要Todo列表来保持执行轨道，甚至依赖每5轮的系统提醒。但当代理能力增强后，持续提醒反而可能限制其主动性。团队将TodoWrite替换为Task工具：Todo聚焦于”让代理不跑偏”，而Task支持依赖关系管理、子代理间共享更新。这体现了”过去’必需’的工具可能成为今天的限制”。</p>
+<h2 id="搜索与上下文构建"><a href="#搜索与上下文构建" class="headerlink" title="搜索与上下文构建"></a>搜索与上下文构建</h2><p>初期依赖RAG向量数据库被动接收上下文，但突破来自于提供Grep工具，使代理能在代码库中主动搜索。随着代理变聪明，只要给予合适工具，它越来越擅长自主构建上下文。这一进展促成了”渐进披露”（Progressive Disclosure）理念通过Agent Skills机制正式化——代理可读取skill文件，skill文件又能引用其他文件形成递归搜索。在一年时间里，代理从”几乎无法自主构建上下文”演进到”能跨越多层文件做嵌套搜索”。</p>
+<h2 id="渐进披露实践"><a href="#渐进披露实践" class="headerlink" title="渐进披露实践"></a>渐进披露实践</h2><p>将全部知识塞入system prompt会增加上下文负担。文档入口链接虽有效，但代理常将大量检索结果塞入上下文。团队构建了Claude Code Guide子代理：当用户询问Claude Code自身用法时，主代理被提示调用这个子代理，该子代理拥有更完整的专门指令，在扩展动作空间的同时避免了新增工具。</p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><ul>
+<li>工具设计需基于代理的实际能力，通过观察实验了解其”能力形状”</li>
+<li>工具需要随代理能力提升而迭代更新</li>
+<li>渐进披露通过分层、递归的机制让代理按需发现上下文</li>
+<li>结构化交互通过专用工具稳定输出格式</li>
+<li>多代理场景需要工具支持依赖管理、状态共享和动态任务调整</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>AI代理工具设计是一个动态的、观察驱动的过程。成功的关键在于”学会像代理一样思考”：理解代理如何感知问题、需要什么工具来解决问题，并据此设计与之匹配的动作空间。工具设计最终是艺术与科学的结合，需在模型能力、目标与环境之间找到最佳平衡。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-ai-agent-tool-design-lessons-from-building-claude-code/" data-id="cuidVg4a0OinEtkAnv33lA84a" data-title="AI Agent工具设计，Claude Code构建经验总结" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/claude-code/" rel="tag">claude-code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/engineering/" rel="tag">engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tool-design/" rel="tag">tool-design</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-05-spec-driven-development-12-anti-intuitive-insights" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/" class="article-date">
+  <time class="dt-published" datetime="2026-03-04T16:00:00.000Z" itemprop="datePublished">2026-03-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/AI/">AI</a>►<a class="article-category-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/">Spec-Driven Development, 12个反直觉发现与AI原生开发启示</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Spec-Driven-Development：12个反直觉发现与AI原生开发启示"><a href="#Spec-Driven-Development：12个反直觉发现与AI原生开发启示" class="headerlink" title="Spec-Driven Development：12个反直觉发现与AI原生开发启示"></a>Spec-Driven Development：12个反直觉发现与AI原生开发启示</h2><p><strong>来源：</strong> 知乎文章关于SDD实践的总结（Martin Fowler团队警告与12个反直觉发现）</p>
+<h3 id="背景：权威警告与反直觉实践"><a href="#背景：权威警告与反直觉实践" class="headerlink" title="背景：权威警告与反直觉实践"></a>背景：权威警告与反直觉实践</h3><p>2025年底，Martin Fowler团队的Birgitta Böckeler发表了对SDD工具的深度评测，用德语词”Verschlimmbesserung”（越改越坏）警告SDD的过度工程化风险。ThoughtWorks作为全球受尊敬的软件咨询公司，其”技术雷达”影响广泛，这一警告引起了SDD社区的关注。</p>
+<p>作者通过两个月实践SDD（从Spec Kit到OpenSpec到Superpowers）以及多个AI原生端到端开发项目，总结了12个大部分违反最初直觉的发现。这些发现揭示了AI原生开发的最佳实践不是”选对工具”，而是”建立正确的人机协作模式”——人做决策，AI做执行，测试做验证。</p>
+<p>这些反直觉发现可分为三类。在Spec设计上，200行Spec比2000行更有效，因为过长Spec导致AI选择性执行，优先遵守文件开头指令；可执行命令比描述性文字有效10倍，跳过自然语言理解损耗；”不做什么”比”做什么”更重要，禁止清单防止灾难性错误；模糊的高层指令有时比精确的低层指令更好，给AI留出设计空间调用训练数据中的最佳实践。</p>
+<p>在工作流方面，测试比规范更重要，测试作为”结果的验证”比”意图的表达”更可靠；Vibe Coding不该被抛弃，原型阶段需要快速验证可行性而非流程负担；审查Spec比审查代码更累，因为代码有工具辅助验证而Spec全靠人脑判断；AI的第一版通常最好，反复修改导致代码”补丁叠补丁”退化，重新生成比反复修改更高效。</p>
+<p>在人机协作上，AI会”偷懒”但不会”反抗”，在指令模糊时选择最省力路径；安全是AI的盲区而非强项，需要显式安全要求清单和自动扫描；最佳工作模式是”人机交替”而非”AI自治”，每个交替周期控制在可审查粒度内；写Spec的能力比选工具重要10倍，同样工具下会写Spec工程师产出质量差距达5-10倍。</p>
+<h3 id="思考：AI时代软件工程的范式重构"><a href="#思考：AI时代软件工程的范式重构" class="headerlink" title="思考：AI时代软件工程的范式重构"></a>思考：AI时代软件工程的范式重构</h3><p>Martin Fowler的警告揭示了SDD工具过度工程化的风险，但更深层的真相是：我们正在见证软件工程范式的根本性重构。这种重构不仅关乎工具选择，更关乎工程师角色、工作模式和价值链的全面转变。未来的工程师主要工作不再是编写代码，而是设计能让AI高效、可靠、一致工作的系统框架，包括环境设计、意图定义、约束编码、反馈回路构建等高抽象层工作。工程师需要思考的不再是”我如何写出好代码”，而是”我如何设计出让AI能持续产出好代码的系统”，角色正在从编码者重构为系统设计师。</p>
+<p>与此同时，AI开发的工作模式正在从单次会话的临时交互演进为需要长期记忆和上下文管理的持久协作。这要求建立持久的、可检索的知识库系统，让AI能记住项目历史、设计决策和技术约束，在跨会话中保持连贯性。复杂任务需要从单个AI执行演进为多AI专业化协作，引入调度器机制分解任务、分配专家、管理依赖关系。这种演进反映了从临时工具使用到持续协作伙伴关系的转变。</p>
+<p>验证文化也发生了根本转变，从传统的依赖详细规范和人工审查，转向以客观测试为核心的验证机制。测试作为可执行的验证工具，比主观、易误解的规范描述更可靠。自动化安全扫描、代码分析、性能测试成为必须而非可选，这体现了从”相信规范”到”相信测试”的范式转变。AI原生开发的采用也必然是渐进式的，根据项目阶段需要采用不同工作深度：原型探索阶段需要Vibe Coding的快速验证能力，可行性确认后引入轻量Spec建立基本约束，工程化阶段采用完整SDD确保质量一致性。这种渐进式演进承认了不同任务的不同复杂度需求。</p>
+<p>安全与信任面临新挑战，AI生成的代码不能天然被信任，安全必须成为显式、强制的要求而非隐含期望。线程安全、输入验证、路径遍历防护等安全关注点需要明确编码进约束系统，配合自动化扫描工具和人工审查。这些变化共同催生了新的技能体系，AI时代工程师的核心竞争力从编程语言熟练度转向Spec设计能力、系统框架设计能力、测试策略制定能力、安全要求定义能力、人机协作流程设计能力。这些”软技能”将决定工程师在AI时代的价值和产出效率。</p>
+<p>最终的启示是：AI原生开发不是简单地把传统工作流程”AI化”，而是重新思考软件工程的本质。当代码实现不再是瓶颈，人类的独特价值就转移到更高层次的思考：战略规划、系统设计、约束定义、验证机制、协作流程。这才是AI时代软件工程的新边疆——不是与AI竞争写代码，而是设计出让AI能发挥最大价值的工作系统。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/05/2026-03-05-spec-driven-development-12-anti-intuitive-insights/" data-id="cuidnwV1Z35pcYVeb7IBiFVgZ" data-title="Spec-Driven Development, 12个反直觉发现与AI原生开发启示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/testing/" rel="tag">testing</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-04-fixing-github-actions-deprecation-errors" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/04/2026-03-04-fixing-github-actions-deprecation-errors/" class="article-date">
+  <time class="dt-published" datetime="2026-03-03T16:00:00.000Z" itemprop="datePublished">2026-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/GitHub/">GitHub</a>►<a class="article-category-link" href="/categories/GitHub/DevOps/">DevOps</a>►<a class="article-category-link" href="/categories/GitHub/DevOps/CI-CD/">CI/CD</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/04/2026-03-04-fixing-github-actions-deprecation-errors/">修复GitHub Actions弃用错误</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="修复GitHub-Actions弃用错误：actions-upload-artifact-v3升级指南"><a href="#修复GitHub-Actions弃用错误：actions-upload-artifact-v3升级指南" class="headerlink" title="修复GitHub Actions弃用错误：actions&#x2F;upload-artifact v3升级指南"></a>修复GitHub Actions弃用错误：actions&#x2F;upload-artifact v3升级指南</h1><h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>今天在部署Jekyll博客时，GitHub Actions工作流突然失败，错误信息显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: This request has been automatically failed because it uses a deprecated version of `actions/upload-artifact: v3`.</span><br></pre></td></tr></table></figure>
+
+<p>根据GitHub官方公告，从2025年1月30日起，GitHub Actions客户将无法再使用v3版本的<code>actions/upload-artifact</code>或<code>actions/download-artifact</code>。虽然v4版本的artifact动作将上传和下载速度提高了98%并包含多项新功能，但需要更新工作流以适配新版本。</p>
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><h3 id="弃用时间线"><a href="#弃用时间线" class="headerlink" title="弃用时间线"></a>弃用时间线</h3><ul>
+<li><strong>2024年4月16日</strong>：GitHub发布v3弃用公告</li>
+<li><strong>2024年6月30日</strong>：v1和v2版本弃用计划</li>
+<li><strong>2025年1月30日</strong>：v3版本正式弃用</li>
+</ul>
+<h3 id="影响范围"><a href="#影响范围" class="headerlink" title="影响范围"></a>影响范围</h3><ul>
+<li>使用<code>actions/upload-artifact@v3</code>的工作流</li>
+<li>使用<code>actions/download-artifact@v3</code>的工作流</li>
+<li>依赖这些动作的复合动作（如<code>actions/upload-pages-artifact@v1</code>）</li>
+</ul>
+<h3 id="具体错误"><a href="#具体错误" class="headerlink" title="具体错误"></a>具体错误</h3><p>我的Jekyll博客部署工作流（<code>.github/workflows/pages-deploy.yml</code>）中使用了<code>actions/upload-pages-artifact@v1</code>，这个复合动作内部依赖了已弃用的<code>actions/upload-artifact@v3</code>。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="工作流文件分析"><a href="#工作流文件分析" class="headerlink" title="工作流文件分析"></a>工作流文件分析</h3><p>原始工作流文件包含以下动作版本：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">steps:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Checkout</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/checkout@v3</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">Pages</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/configure-pages@v1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Upload</span> <span class="string">site</span> <span class="string">artifact</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/upload-pages-artifact@v1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">to</span> <span class="string">GitHub</span> <span class="string">Pages</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/deploy-pages@v1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="需要更新的动作"><a href="#需要更新的动作" class="headerlink" title="需要更新的动作"></a>需要更新的动作</h3><table>
+<thead>
+<tr>
+<th>动作名称</th>
+<th>旧版本</th>
+<th>新版本</th>
+<th>更新原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>actions/checkout</code></td>
+<td><code>v3</code></td>
+<td><code>v4</code></td>
+<td>更新到最新稳定版本</td>
+</tr>
+<tr>
+<td><code>actions/configure-pages</code></td>
+<td><code>v1</code></td>
+<td><code>v4</code></td>
+<td>修复页面配置动作</td>
+</tr>
+<tr>
+<td><code>actions/upload-pages-artifact</code></td>
+<td><code>v1</code></td>
+<td><code>v3</code></td>
+<td><strong>关键修复</strong>：解决弃用错误</td>
+</tr>
+<tr>
+<td><code>actions/deploy-pages</code></td>
+<td><code>v1</code></td>
+<td><code>v4</code></td>
+<td>更新部署动作</td>
+</tr>
+</tbody></table>
+<h2 id="实施步骤"><a href="#实施步骤" class="headerlink" title="实施步骤"></a>实施步骤</h2><h3 id="1-定位工作流文件"><a href="#1-定位工作流文件" class="headerlink" title="1. 定位工作流文件"></a>1. 定位工作流文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /path/to/repo -name <span class="string">&quot;*.yml&quot;</span> -o -name <span class="string">&quot;*.yaml&quot;</span> | grep -E <span class="string">&quot;workflows|actions&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-检查文件内容"><a href="#2-检查文件内容" class="headerlink" title="2. 检查文件内容"></a>2. 检查文件内容</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> .github/workflows/pages-deploy.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-执行版本更新"><a href="#3-执行版本更新" class="headerlink" title="3. 执行版本更新"></a>3. 执行版本更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 方法1：使用sed命令批量替换</span></span><br><span class="line">sed -i <span class="string">&#x27;s/actions\/checkout@v3/actions\/checkout@v4/g&#x27;</span> .github/workflows/pages-deploy.yml</span><br><span class="line">sed -i <span class="string">&#x27;s/actions\/configure-pages@v1/actions\/configure-pages@v4/g&#x27;</span> .github/workflows/pages-deploy.yml</span><br><span class="line">sed -i <span class="string">&#x27;s/actions\/upload-pages-artifact@v1/actions\/upload-pages-artifact@v3/g&#x27;</span> .github/workflows/pages-deploy.yml</span><br><span class="line">sed -i <span class="string">&#x27;s/actions\/deploy-pages@v1/actions\/deploy-pages@v4/g&#x27;</span> .github/workflows/pages-deploy.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证更新结果"><a href="#4-验证更新结果" class="headerlink" title="4. 验证更新结果"></a>4. 验证更新结果</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">steps:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Checkout</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">Pages</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/configure-pages@v4</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Upload</span> <span class="string">site</span> <span class="string">artifact</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/upload-pages-artifact@v3</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">to</span> <span class="string">GitHub</span> <span class="string">Pages</span></span><br><span class="line">    <span class="attr">uses:</span> <span class="string">actions/deploy-pages@v4</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-提交和推送更改"><a href="#5-提交和推送更改" class="headerlink" title="5. 提交和推送更改"></a>5. 提交和推送更改</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">git add .github/workflows/pages-deploy.yml</span><br><span class="line">git commit -m <span class="string">&quot;Update GitHub Actions workflow versions to fix deprecation errors</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">- actions/checkout@v3 → v4</span></span><br><span class="line"><span class="string">- actions/configure-pages@v1 → v4</span></span><br><span class="line"><span class="string">- actions/upload-pages-artifact@v1 → v3</span></span><br><span class="line"><span class="string">- actions/deploy-pages@v1 → v4</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Fix for: &#x27;This request has been automatically failed because it uses a deprecated version of `actions/upload-artifact: v3`&#x27;&quot;</span></span><br><span class="line"></span><br><span class="line">git push origin main</span><br></pre></td></tr></table></figure>
+
+<h2 id="验证修复"><a href="#验证修复" class="headerlink" title="验证修复"></a>验证修复</h2><h3 id="1-检查GitHub-Actions运行状态"><a href="#1-检查GitHub-Actions运行状态" class="headerlink" title="1. 检查GitHub Actions运行状态"></a>1. 检查GitHub Actions运行状态</h3><ul>
+<li>访问GitHub仓库的 <strong>Actions</strong> 标签</li>
+<li>查看”Build and Deploy”工作流运行状态</li>
+<li>确认工作流成功执行，不再显示弃用错误</li>
+</ul>
+<h3 id="2-验证网站部署"><a href="#2-验证网站部署" class="headerlink" title="2. 验证网站部署"></a>2. 验证网站部署</h3><ul>
+<li>等待几分钟让GitHub Pages完成部署</li>
+<li>访问你的GitHub Pages网站</li>
+<li>确认网站内容正常显示</li>
+</ul>
+<h3 id="3-检查工作流日志"><a href="#3-检查工作流日志" class="headerlink" title="3. 检查工作流日志"></a>3. 检查工作流日志</h3><ul>
+<li>✅ Checkout步骤使用v4版本</li>
+<li>✅ Configure Pages步骤使用v4版本</li>
+<li>✅ Upload artifact步骤使用v3版本（修复关键）</li>
+<li>✅ Deploy步骤使用v4版本</li>
+</ul>
+<h2 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h2><h3 id="关键学习点"><a href="#关键学习点" class="headerlink" title="关键学习点"></a>关键学习点</h3><ol>
+<li><strong>定期更新依赖</strong>：GitHub Actions动作版本需要定期检查更新</li>
+<li><strong>关注官方公告</strong>：订阅GitHub博客和变更日志，及时了解弃用通知</li>
+<li><strong>测试工作流</strong>：在非生产环境测试工作流更新，确保兼容性</li>
+<li><strong>版本迁移策略</strong>：制定系统性的版本迁移计划</li>
+</ol>
+<h3 id="v4版本的优势"><a href="#v4版本的优势" class="headerlink" title="v4版本的优势"></a>v4版本的优势</h3><ul>
+<li><strong>性能提升</strong>：上传和下载速度提高98%</li>
+<li><strong>新增功能</strong>：更好的缓存机制、并行上传支持</li>
+<li><strong>安全增强</strong>：改进的权限控制和访问管理</li>
+<li><strong>兼容性</strong>：向后兼容大部分v3工作流配置</li>
+</ul>
+<h3 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h3><ol>
+<li><strong>版本锁定策略</strong>：使用特定版本号而非分支引用</li>
+<li><strong>定期审查</strong>：每季度审查一次工作流文件中的动作版本</li>
+<li><strong>自动化检查</strong>：使用Dependabot或类似工具自动检测过时依赖</li>
+<li><strong>文档记录</strong>：维护工作流版本更新日志</li>
+</ol>
+<h2 id="常见问题解答"><a href="#常见问题解答" class="headerlink" title="常见问题解答"></a>常见问题解答</h2><h3 id="Q1-为什么actions-upload-pages-artifact-v1会导致v3弃用错误？"><a href="#Q1-为什么actions-upload-pages-artifact-v1会导致v3弃用错误？" class="headerlink" title="Q1: 为什么actions/upload-pages-artifact@v1会导致v3弃用错误？"></a>Q1: 为什么<code>actions/upload-pages-artifact@v1</code>会导致v3弃用错误？</h3><p>A1: <code>actions/upload-pages-artifact@v1</code>是一个复合动作，它内部依赖<code>actions/upload-artifact@v3</code>。虽然直接使用的是v1，但底层依赖的是已弃用的v3。</p>
+<h3 id="Q2-更新后是否需要重新配置工作流？"><a href="#Q2-更新后是否需要重新配置工作流？" class="headerlink" title="Q2: 更新后是否需要重新配置工作流？"></a>Q2: 更新后是否需要重新配置工作流？</h3><p>A2: 大多数情况下不需要。v4版本设计为向后兼容，但建议在更新后运行完整的工作流测试。</p>
+<h3 id="Q3-如果其他动作也出现类似错误怎么办？"><a href="#Q3-如果其他动作也出现类似错误怎么办？" class="headerlink" title="Q3: 如果其他动作也出现类似错误怎么办？"></a>Q3: 如果其他动作也出现类似错误怎么办？</h3><p>A3: 检查工作流中所有动作的版本，特别是：<code>actions/setup-node</code>、<code>actions/setup-python</code>、<code>actions/cache</code>、其他GitHub官方动作。</p>
+<h3 id="Q4-更新版本会影响现有的构建产物吗？"><a href="#Q4-更新版本会影响现有的构建产物吗？" class="headerlink" title="Q4: 更新版本会影响现有的构建产物吗？"></a>Q4: 更新版本会影响现有的构建产物吗？</h3><p>A4: 不会。已上传的构建产物在其保留期内仍可通过UI或REST API访问，不受版本更新的影响。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>GitHub Actions的版本弃用是一个持续的过程，保持工作流文件更新是维护CI&#x2F;CD流水线健康的重要部分。通过这次修复，我们不仅解决了当前的构建错误，还建立了一个可持续的版本维护策略。</p>
+<p><strong>关键建议</strong>：建立定期的依赖检查机制，优先使用最新稳定版本，并在非关键分支测试更新后再合并到主分支。这样可以确保在正式弃用日期前完成迁移，避免生产环境的中断。</p>
+<p>自动化工具的维护需要与技术发展同步，只有持续更新和学习，才能充分发挥其价值。希望这次经验分享能帮助其他开发者顺利解决类似的GitHub Actions弃用问题。</p>
+<blockquote>
+<p><strong>本文档生成说明</strong>：本文章由Claude Code根据实际修复GitHub Actions弃用错误的会话过程自动生成，展示了AI辅助开发在技术问题解决和文档编写中的应用。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/04/2026-03-04-fixing-github-actions-deprecation-errors/" data-id="cuidFiIWBMkH9lrVm8J7h9QaP" data-title="修复GitHub Actions弃用错误" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/automation/" rel="tag">automation</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ci-cd/" rel="tag">ci&#x2F;cd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/deployment/" rel="tag">deployment</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-actions/" rel="tag">github-actions</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/" class="article-date">
+  <time class="dt-published" datetime="2026-03-03T16:00:00.000Z" itemprop="datePublished">2026-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Jekyll/">Jekyll</a>►<a class="article-category-link" href="/categories/Jekyll/DevOps/">DevOps</a>►<a class="article-category-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/">解决Jekyll博客中的YAML解析错误，description字段冒号问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在部署Jekyll博客时，经常会遇到各种构建错误。其中一种常见但容易忽略的错误是YAML Front Matter解析错误。今天在构建博客时遇到了以下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: YAML Exception reading /path/to/_posts/2026-03-04-fixing-github-actions-deprecation-errors.md: (&lt;unknown&gt;): mapping values are not allowed in this context at line 3 column 63</span><br></pre></td></tr></table></figure>
+
+<p>这个错误导致Jekyll构建失败，网站无法正常生成。错误信息指向YAML解析问题，具体位置是第3行第63列。</p>
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><h3 id="原始问题代码"><a href="#原始问题代码" class="headerlink" title="原始问题代码"></a>原始问题代码</h3><p>检查出错的Front Matter部分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 修复GitHub Actions弃用错误</span><br><span class="line">description: 本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact: v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。</span><br><span class="line">author: SG-Amadeus</span><br><span class="line">date: 2026-03-04 00:00:00 +0800</span><br><span class="line">categories: [GitHub, DevOps, CI/CD]</span><br><span class="line">tags: [github actions, ci/cd, automation, deployment, jekyll]</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题根源"><a href="#问题根源" class="headerlink" title="问题根源"></a>问题根源</h3><p>问题出现在<code>description</code>字段的第63个字符处。仔细分析：</p>
+<ol>
+<li><strong>冒号的特殊作用</strong>：在YAML语法中，冒号<code>:</code>是键值对的分隔符</li>
+<li><strong>字符串中的冒号</strong>：<code>description</code>字段包含文本<code>&quot;actions/upload-artifact: v3已弃用&quot;</code></li>
+<li><strong>解析器混淆</strong>：YAML解析器将字符串内的冒号<code>:</code>误认为是新的键值对开始</li>
+<li><strong>位置计算</strong>：第63列正好是<code>actions/upload-artifact:</code>中的冒号位置</li>
+</ol>
+<h3 id="YAML解析规则"><a href="#YAML解析规则" class="headerlink" title="YAML解析规则"></a>YAML解析规则</h3><p>YAML解析器按照以下规则处理字符串：</p>
+<ul>
+<li>未引用的字符串中的冒号可能被解释为键值对分隔符</li>
+<li>引号内的字符串中的冒号应该被正确识别为文本内容</li>
+<li>但在某些YAML解析器中，即使引号内也可能出现解析歧义</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案一：使用单引号包裹整个字符串（推荐）"><a href="#方案一：使用单引号包裹整个字符串（推荐）" class="headerlink" title="方案一：使用单引号包裹整个字符串（推荐）"></a>方案一：使用单引号包裹整个字符串（推荐）</h3><p>将description字段用单引号<code>&#39;</code>包裹起来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: &#x27;本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact: v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点</strong>：</p>
+<ul>
+<li>明确告诉YAML解析器这是一个完整的字符串</li>
+<li>保留字符串内所有的特殊字符（包括冒号和双引号）</li>
+<li>符合YAML最佳实践</li>
+</ul>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>单引号内不能再包含单引号，除非转义</li>
+<li>双引号在单引号内不需要转义</li>
+</ul>
+<h3 id="方案二：修改字符串内容避免冒号"><a href="#方案二：修改字符串内容避免冒号" class="headerlink" title="方案二：修改字符串内容避免冒号"></a>方案二：修改字符串内容避免冒号</h3><p>如果不想使用引号，可以修改描述内容，移除或替换冒号：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: 本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。</span><br></pre></td></tr></table></figure>
+
+<p><strong>更改</strong>：<code>actions/upload-artifact: v3</code> → <code>actions/upload-artifact v3</code></p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>无需添加引号，保持简洁</li>
+<li>避免所有可能的解析歧义</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>可能改变原始语义（版本标识符中的冒号有特定含义）</li>
+<li>不是通用解决方案</li>
+</ul>
+<h3 id="方案三：使用双引号并转义冒号"><a href="#方案三：使用双引号并转义冒号" class="headerlink" title="方案三：使用双引号并转义冒号"></a>方案三：使用双引号并转义冒号</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: &quot;本文详细记录如何解决GitHub Actions中\&quot;actions/upload-artifact: v3已弃用\&quot;的错误，包括问题诊断、版本升级步骤和验证方法。&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>双引号内需要转义双引号<code>\&quot;</code></li>
+<li>冒号在双引号内通常安全，但某些解析器仍有问题</li>
+</ul>
+<h2 id="YAML-Front-Matter最佳实践"><a href="#YAML-Front-Matter最佳实践" class="headerlink" title="YAML Front Matter最佳实践"></a>YAML Front Matter最佳实践</h2><h3 id="1-字符串引用规则"><a href="#1-字符串引用规则" class="headerlink" title="1. 字符串引用规则"></a>1. 字符串引用规则</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 安全：普通文本无需引号</span><br><span class="line">title: 我的博客文章</span><br><span class="line"></span><br><span class="line"># 推荐：包含特殊字符时使用单引号</span><br><span class="line">description: &#x27;包含:冒号、@符号或#井号的内容&#x27;</span><br><span class="line"></span><br><span class="line"># 必要：包含单引号时使用双引号</span><br><span class="line">excerpt: &quot;这是一个&#x27;包含单引号&#x27;的示例&quot;</span><br><span class="line"></span><br><span class="line"># 复杂：同时包含单双引号时使用转义</span><br><span class="line">summary: &quot;他说：&#x27;这是一个\&quot;重要\&quot;通知&#x27;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-特殊字符处理"><a href="#2-特殊字符处理" class="headerlink" title="2. 特殊字符处理"></a>2. 特殊字符处理</h3><table>
+<thead>
+<tr>
+<th>字符</th>
+<th>处理方法</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>冒号<code>:</code></td>
+<td>单引号包裹</td>
+<td><code>&#39;内容:包含冒号&#39;</code></td>
+</tr>
+<tr>
+<td>井号<code>#</code></td>
+<td>单引号包裹</td>
+<td><code>&#39;标题#副标题&#39;</code></td>
+</tr>
+<tr>
+<td>方括号<code>[]</code></td>
+<td>通常安全</td>
+<td><code>tags: [tag1, tag2]</code></td>
+</tr>
+<tr>
+<td>花括号<code>{}</code></td>
+<td>通常安全</td>
+<td><code>options: {key: value}</code></td>
+</tr>
+<tr>
+<td>百分号<code>%</code></td>
+<td>通常安全</td>
+<td><code>progress: 100%</code></td>
+</tr>
+</tbody></table>
+<h3 id="3-多行字符串处理"><a href="#3-多行字符串处理" class="headerlink" title="3. 多行字符串处理"></a>3. 多行字符串处理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 使用|保留换行符</span><br><span class="line">excerpt: |</span><br><span class="line">  这是第一行</span><br><span class="line">  这是第二行</span><br><span class="line">  包含:特殊字符</span><br><span class="line"></span><br><span class="line"># 使用&gt;折叠换行符</span><br><span class="line">summary: &gt;</span><br><span class="line">  这是一个长段落，会被折叠成单行，</span><br><span class="line">  但仍然可以包含各种特殊符号。</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证工具"><a href="#4-验证工具" class="headerlink" title="4. 验证工具"></a>4. 验证工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 使用Ruby的YAML解析器验证</span><br><span class="line">ruby -e &quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;_posts/example.md&#x27;)&quot;</span><br><span class="line"></span><br><span class="line"># 使用yamllint工具</span><br><span class="line">yamllint _posts/example.md</span><br><span class="line"></span><br><span class="line"># Jekyll本地构建测试</span><br><span class="line">bundle exec jekyll build --trace</span><br></pre></td></tr></table></figure>
+
+<h2 id="调试技巧"><a href="#调试技巧" class="headerlink" title="调试技巧"></a>调试技巧</h2><h3 id="1-定位错误位置"><a href="#1-定位错误位置" class="headerlink" title="1. 定位错误位置"></a>1. 定位错误位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启用详细跟踪</span><br><span class="line">bundle exec jekyll build --trace</span><br><span class="line"></span><br><span class="line"># 查看具体行号和列号</span><br><span class="line"># 错误信息中的&quot;line 3 column 63&quot;直接指出问题位置</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-隔离测试"><a href="#2-隔离测试" class="headerlink" title="2. 隔离测试"></a>2. 隔离测试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 创建测试文件</span><br><span class="line">echo &quot;---</span><br><span class="line">title: 测试</span><br><span class="line">description: 测试:包含冒号</span><br><span class="line">---&quot; &gt; test.md</span><br><span class="line"></span><br><span class="line"># 单独构建测试文件</span><br><span class="line">bundle exec jekyll build --source . --destination _test</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-在线验证工具"><a href="#3-在线验证工具" class="headerlink" title="3. 在线验证工具"></a>3. 在线验证工具</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.yamllint.com/">YAML Lint</a> - 在线YAML验证</li>
+<li><a target="_blank" rel="noopener" href="https://codebeautify.org/yaml-validator">YAML Validator</a> - 语法检查</li>
+<li><a target="_blank" rel="noopener" href="https://jekyllrb.com/docs/configuration/options/">Jekyll CLI</a> - 本地构建测试</li>
+</ul>
+<h2 id="常见YAML错误场景"><a href="#常见YAML错误场景" class="headerlink" title="常见YAML错误场景"></a>常见YAML错误场景</h2><h3 id="1-未闭合的引号"><a href="#1-未闭合的引号" class="headerlink" title="1. 未闭合的引号"></a>1. 未闭合的引号</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 错误</span><br><span class="line">description: &#x27;未闭合的字符串</span><br><span class="line"></span><br><span class="line"># 正确</span><br><span class="line">description: &#x27;闭合的字符串&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-混合制表符和空格"><a href="#2-混合制表符和空格" class="headerlink" title="2. 混合制表符和空格"></a>2. 混合制表符和空格</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 错误（制表符缩进）</span><br><span class="line">title: 测试</span><br><span class="line">	description: 内容  # ← 制表符</span><br><span class="line"></span><br><span class="line"># 正确（空格缩进）</span><br><span class="line">title: 测试</span><br><span class="line">  description: 内容  # ← 两个空格</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-列表格式错误"><a href="#3-列表格式错误" class="headerlink" title="3. 列表格式错误"></a>3. 列表格式错误</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 错误</span><br><span class="line">tags: [tag1, tag2,]</span><br><span class="line"></span><br><span class="line"># 正确</span><br><span class="line">tags: [tag1, tag2]</span><br><span class="line"># 或</span><br><span class="line">tags:</span><br><span class="line">  - tag1</span><br><span class="line">  - tag2</span><br></pre></td></tr></table></figure>
+
+<h2 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h2><h3 id="1-编辑器配置"><a href="#1-编辑器配置" class="headerlink" title="1. 编辑器配置"></a>1. 编辑器配置</h3><ul>
+<li>使用支持YAML语法高亮的编辑器（VS Code、Vim、Sublime Text）</li>
+<li>配置自动缩进为2个空格</li>
+<li>启用YAML语法检查插件</li>
+</ul>
+<h3 id="2-预提交检查"><a href="#2-预提交检查" class="headerlink" title="2. 预提交检查"></a>2. 预提交检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># pre-commit hook示例</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> $(git diff --cached --name-only | grep -E <span class="string">&#x27;\.(md|markdown)$&#x27;</span>); <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">if</span> ! ruby -e <span class="string">&quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;<span class="variable">$file</span>&#x27;)&quot;</span> 2&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;YAML错误在文件: <span class="variable">$file</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-持续集成验证"><a href="#3-持续集成验证" class="headerlink" title="3. 持续集成验证"></a>3. 持续集成验证</h3><p>在GitHub Actions工作流中添加YAML验证步骤：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Validate</span> <span class="string">YAML</span> <span class="string">Front</span> <span class="string">Matter</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    for file in _posts/*.md; do</span></span><br><span class="line"><span class="string">      echo &quot;验证: $file&quot;</span></span><br><span class="line"><span class="string">      ruby -e &quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;$file&#x27;)&quot;</span></span><br><span class="line"><span class="string">    done</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>YAML Front Matter错误是Jekyll博客部署中的常见问题，但通过理解YAML解析规则和采取适当的预防措施，可以轻松避免这些问题。</p>
+<p><strong>关键要点</strong>：</p>
+<ol>
+<li><strong>引号策略</strong>：包含特殊字符（特别是冒号）的字符串使用单引号包裹</li>
+<li><strong>验证流程</strong>：在提交前使用工具验证YAML语法</li>
+<li><strong>编辑器支持</strong>：使用正确的编辑器配置减少人为错误</li>
+<li><strong>渐进修复</strong>：从简单问题开始，逐步处理复杂情况</li>
+</ol>
+<p><strong>最终建议</strong>：对于所有包含特殊字符的Front Matter字段，统一使用单引号包裹，这是最简单、最安全的做法。</p>
+<p>通过这次YAML解析错误的修复经验，我们不仅解决了具体的技术问题，还建立了一套完整的YAML语法验证和预防体系，为未来的博客部署工作奠定了坚实的基础。</p>
+<blockquote>
+<p><strong>本文档生成说明</strong>：本文章由Claude Code根据实际修复Jekyll YAML解析错误的会话过程自动生成，专注于YAML语法问题的分析和解决方案。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/" data-id="cuidG8UFn4TWDvU8w72bwpesp" data-title="解决Jekyll博客中的YAML解析错误，description字段冒号问题" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/">AI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90/">技术分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF/">技术趋势</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">职业发展</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/%E6%8A%80%E6%9C%AF%E9%9D%A2%E8%AF%95/">技术面试</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/">AI Agents</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/">Software Engineering</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/System-Design/">System Design</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/">AI编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/">软件架构</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/%E4%BA%BA%E6%9C%BA%E5%8D%8F%E4%BD%9C/">人机协作</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">系统编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8/">高性能服务器</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/CI-CD/">CI/CD</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/">Jekyll</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/">Web Automation</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/">Testing</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/Security/">Security</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/">Zotero</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/">API</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/">项目开发</a></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/">CLI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/AI%E6%99%BA%E8%83%BD%E4%BD%93/">AI智能体</a></li></ul></li></ul></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI%E9%9D%A2%E8%AF%95/" rel="tag">AI面试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-interface/" rel="tag">agent-interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-memory/" rel="tag">agent-memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agents/" rel="tag">ai agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-assisted-programming/" rel="tag">ai-assisted-programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aider/" rel="tag">aider</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthropic/" rel="tag">anthropic</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anti-bot/" rel="tag">anti-bot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/architecture/" rel="tag">architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asynchronous/" rel="tag">asynchronous</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation/" rel="tag">automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation-framework/" rel="tag">automation-framework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-devtools/" rel="tag">chrome-devtools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ci-cd/" rel="tag">ci&#x2F;cd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-code/" rel="tag">claude-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-mem/" rel="tag">claude-mem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cli-anything/" rel="tag">cli-anything</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coding-assistant/" rel="tag">coding-assistant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent-programming/" rel="tag">concurrent programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deployment/" rel="tag">deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed-systems/" rel="tag">distributed systems</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/engineering/" rel="tag">engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evolution/" rel="tag">evolution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/future-trends/" rel="tag">future-trends</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-actions/" rel="tag">github-actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hardcoding/" rel="tag">hardcoding</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/harness-engineering/" rel="tag">harness-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http-api/" rel="tag">http-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-ai-collaboration/" rel="tag">human-ai-collaboration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm/" rel="tag">llm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm-integration/" rel="tag">llm-integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/local-api/" rel="tag">local-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long-running-agents/" rel="tag">long-running agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-architecture/" rel="tag">memory-architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-system/" rel="tag">memory-system</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-session-coordination/" rel="tag">multi-session-coordination</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencode/" rel="tag">opencode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scheduler/" rel="tag">scheduler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serena/" rel="tag">serena</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sogou/" rel="tag">sogou</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/superpowers/" rel="tag">superpowers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/system-design/" rel="tag">system design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/task-management/" rel="tag">task-management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/testing/" rel="tag">testing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thread-pool/" rel="tag">thread pool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool-design/" rel="tag">tool-design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-automation/" rel="tag">web-automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-scraping/" rel="tag">web-scraping</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/workflow/" rel="tag">workflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zero-code/" rel="tag">zero-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zotero/" rel="tag">zotero</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" rel="tag">八股文</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" rel="tag">开发者学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" rel="tag">架构分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" rel="tag">设计规范</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" rel="tag">面试技巧</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">AI面试</a> <a href="/tags/agent-interface/" style="font-size: 10px;">agent-interface</a> <a href="/tags/agent-memory/" style="font-size: 10px;">agent-memory</a> <a href="/tags/ai-agents/" style="font-size: 13.33px;">ai agents</a> <a href="/tags/ai-agent/" style="font-size: 20px;">ai-agent</a> <a href="/tags/ai-assisted-programming/" style="font-size: 10px;">ai-assisted-programming</a> <a href="/tags/ai-native/" style="font-size: 10px;">ai-native</a> <a href="/tags/aider/" style="font-size: 10px;">aider</a> <a href="/tags/anthropic/" style="font-size: 13.33px;">anthropic</a> <a href="/tags/anti-bot/" style="font-size: 10px;">anti-bot</a> <a href="/tags/architecture/" style="font-size: 13.33px;">architecture</a> <a href="/tags/asynchronous/" style="font-size: 10px;">asynchronous</a> <a href="/tags/automation/" style="font-size: 16.67px;">automation</a> <a href="/tags/automation-framework/" style="font-size: 10px;">automation-framework</a> <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/blog-deployment/" style="font-size: 10px;">blog deployment</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/chrome-devtools/" style="font-size: 10px;">chrome-devtools</a> <a href="/tags/ci-cd/" style="font-size: 10px;">ci/cd</a> <a href="/tags/claude-code/" style="font-size: 16.67px;">claude-code</a> <a href="/tags/claude-mem/" style="font-size: 10px;">claude-mem</a> <a href="/tags/cli-anything/" style="font-size: 10px;">cli-anything</a> <a href="/tags/coding-assistant/" style="font-size: 10px;">coding-assistant</a> <a href="/tags/concurrent-programming/" style="font-size: 10px;">concurrent programming</a> <a href="/tags/deployment/" style="font-size: 10px;">deployment</a> <a href="/tags/distributed-systems/" style="font-size: 10px;">distributed systems</a> <a href="/tags/engineering/" style="font-size: 10px;">engineering</a> <a href="/tags/evolution/" style="font-size: 10px;">evolution</a> <a href="/tags/front-matter/" style="font-size: 10px;">front matter</a> <a href="/tags/future-trends/" style="font-size: 10px;">future-trends</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github-actions/" style="font-size: 10px;">github-actions</a> <a href="/tags/hardcoding/" style="font-size: 10px;">hardcoding</a> <a href="/tags/harness-engineering/" style="font-size: 10px;">harness-engineering</a> <a href="/tags/http-api/" style="font-size: 13.33px;">http-api</a> <a href="/tags/human-ai-collaboration/" style="font-size: 10px;">human-ai-collaboration</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/jekyll/" style="font-size: 13.33px;">jekyll</a> <a href="/tags/llm/" style="font-size: 10px;">llm</a> <a href="/tags/llm-integration/" style="font-size: 13.33px;">llm-integration</a> <a href="/tags/local-api/" style="font-size: 10px;">local-api</a> <a href="/tags/long-running-agents/" style="font-size: 10px;">long-running agents</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/memory-architecture/" style="font-size: 10px;">memory-architecture</a> <a href="/tags/memory-system/" style="font-size: 10px;">memory-system</a> <a href="/tags/multi-session-coordination/" style="font-size: 10px;">multi-session-coordination</a> <a href="/tags/openai/" style="font-size: 13.33px;">openai</a> <a href="/tags/opencode/" style="font-size: 10px;">opencode</a> <a href="/tags/parsing-error/" style="font-size: 10px;">parsing error</a> <a href="/tags/playwright/" style="font-size: 10px;">playwright</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/scheduler/" style="font-size: 10px;">scheduler</a> <a href="/tags/serena/" style="font-size: 10px;">serena</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software engineering</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software-engineering</a> <a href="/tags/sogou/" style="font-size: 10px;">sogou</a> <a href="/tags/spec-driven-development/" style="font-size: 10px;">spec-driven-development</a> <a href="/tags/superpowers/" style="font-size: 10px;">superpowers</a> <a href="/tags/system-design/" style="font-size: 13.33px;">system design</a> <a href="/tags/task-management/" style="font-size: 10px;">task-management</a> <a href="/tags/testing/" style="font-size: 13.33px;">testing</a> <a href="/tags/thread-pool/" style="font-size: 10px;">thread pool</a> <a href="/tags/tool-design/" style="font-size: 10px;">tool-design</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web-automation/" style="font-size: 10px;">web-automation</a> <a href="/tags/web-scraping/" style="font-size: 10px;">web-scraping</a> <a href="/tags/workflow/" style="font-size: 13.33px;">workflow</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/zero-code/" style="font-size: 10px;">zero-code</a> <a href="/tags/zotero/" style="font-size: 16.67px;">zotero</a> <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" style="font-size: 10px;">八股文</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">开发者学习</a> <a href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" style="font-size: 10px;">架构分析</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" style="font-size: 10px;">设计规范</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" style="font-size: 10px;">面试技巧</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/03/17/2026-03-17-dancing-with-eight-part-essay-interviews-in-ai-era/">大模型时代下，开发者如何与&#34;八股文&#34;面试共舞？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/">CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/">当AI写代码时，为什么它总是把配置写死在代码里？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/13/2026-03-13-zotero-local-data-modification-gui-scripts-http-api/">打破 Zotero 的本地数据修改壁垒——从 GUI 脚本到 HTTP API 的探索之路</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

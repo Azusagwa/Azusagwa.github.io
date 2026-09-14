@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>博客文章 · 刘家浩</title>
+  <meta name="description" content="刘家浩的技术博客文章列表。">
+  <link rel="stylesheet" href="css/blog.css">
+</head>
+<body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--1"></div>
+  <div class="bg-glow bg-glow--2"></div>
+  <div class="grid-overlay"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark">&lt;/&gt;</span>
+        <span>刘家浩</span>
+      </a>
+      <a class="nav-home" href="/">回到主页 ←</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="list-head">
+      <p class="eyebrow">BLOG ARCHIVE</p>
+      <h1>博客文章</h1>
+      <p class="lede">记录 AI Agent 与 RAG 应用开发的技术实践与思考。</p>
+    </section>
+
+    <section class="post-list">
+      <a class="post-row" href="/2026/06/20/2026-06-20-ai-harness-engineering/">
+        <span class="post-date">2026-06-20</span>
+        <span class="post-title">AI 编码智能体的工作环境保护框架工程：从入门到顶点项目</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/17/2026-03-17-dancing-with-eight-part-essay-interviews-in-ai-era/">
+        <span class="post-date">2026-03-17</span>
+        <span class="post-title">大模型时代下，开发者如何与“八股文”面试共舞？</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/">
+        <span class="post-date">2026-03-16</span>
+        <span class="post-title">CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/">
+        <span class="post-date">2026-03-15</span>
+        <span class="post-title">当AI写代码时，为什么它总是把配置写死在代码里？</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/">
+        <span class="post-date">2026-03-14</span>
+        <span class="post-title">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/13/2026-03-13-zotero-local-data-modification-gui-scripts-http-api/">
+        <span class="post-date">2026-03-13</span>
+        <span class="post-title">打破 Zotero 的本地数据修改壁垒——从 GUI 脚本到 HTTP API 的探索之路</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/10/2026-03-10-claude-code-tasks-blog/">
+        <span class="post-date">2026-03-10</span>
+        <span class="post-title">Claude Code Tasks功能解析：从问题解决到优势分析</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/09/2026-03-09-effective-harnesses-long-running-agents-technical-analysis/">
+        <span class="post-date">2026-03-09</span>
+        <span class="post-title">长时间运行AI代理的有效约束系统：Anthropic的双代理设计深度解析</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/09/2026-03-09-superpowers-architecture-analysis-and-evolution/">
+        <span class="post-date">2026-03-09</span>
+        <span class="post-title">Superpowers架构思考与演进方向</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/08/2026-03-08-playwright-vs-chrome-devtools-automated-web-extraction-technical-differences/">
+        <span class="post-date">2026-03-08</span>
+        <span class="post-title">Playwright vs Chrome DevTools：自动化网页提取的技术差异</span>
+        <span class="post-arrow">→</span>
+      </a>
+      <a class="post-row" href="/2026/03/06/2026-03-06-aider-claude-code-opencode-ai-coding-assistant-evolution-pros-cons-future-outlook/">
+        <span class="post-date">2026-03-06</span>
+        <span class="post-title">从aider到Claude Code：AI编码助手的技术演进与“简单但高效”设计哲学</span>
+        <span class="post-arrow">→</span>
+      </a>
+    </section>
+
+    <footer class="site-footer">
+      <p>© <span id="year">2026</span> 刘家浩 · 保持热爱，奔赴山海</p>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    (function () {
+      var canvas = document.getElementById('particles');
+      var ctx = canvas.getContext('2d');
+      var W, H, ps = [];
+      function rs() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+      addEventListener('resize', rs); rs();
+      var N = 70;
+      for (var i = 0; i < N; i++) ps.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.6+.4,c:['0,212,255','124,92,255','255,110,199','255,255,255'][i%4]});
+      function dr(){ ctx.clearRect(0,0,W,H); for(var i=0;i<ps.length;i++){var p=ps[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fillStyle='rgba('+p.c+',0.7)';ctx.fill();} requestAnimationFrame(dr); }
+      dr();
+    })();
+  </script>
+  </script>
+</body>
+</html>

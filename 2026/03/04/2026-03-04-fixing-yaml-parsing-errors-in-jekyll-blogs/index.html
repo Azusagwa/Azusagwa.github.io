@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>解决Jekyll博客中的YAML解析错误，description字段冒号问题 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="问题背景在部署Jekyll博客时，经常会遇到各种构建错误。其中一种常见但容易忽略的错误是YAML Front Matter解析错误。今天在构建博客时遇到了以下错误： 1Error: YAML Exception reading &#x2F;path&#x2F;to&#x2F;_posts&#x2F;2026-03-04-fixing-github-actions-deprecation-errors.md: (&lt;unknown&amp;g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决Jekyll博客中的YAML解析错误，description字段冒号问题">
+<meta property="og:url" content="http://example.com/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="问题背景在部署Jekyll博客时，经常会遇到各种构建错误。其中一种常见但容易忽略的错误是YAML Front Matter解析错误。今天在构建博客时遇到了以下错误： 1Error: YAML Exception reading &#x2F;path&#x2F;to&#x2F;_posts&#x2F;2026-03-04-fixing-github-actions-deprecation-errors.md: (&lt;unknown&amp;g">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2026-03-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-11T08:03:57.726Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="blog deployment">
+<meta property="article:tag" content="front matter">
+<meta property="article:tag" content="jekyll">
+<meta property="article:tag" content="parsing error">
+<meta property="article:tag" content="yaml">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/" class="article-date">
+  <time class="dt-published" datetime="2026-03-03T16:00:00.000Z" itemprop="datePublished">2026-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Jekyll/">Jekyll</a>►<a class="article-category-link" href="/categories/Jekyll/DevOps/">DevOps</a>►<a class="article-category-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      解决Jekyll博客中的YAML解析错误，description字段冒号问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>在部署Jekyll博客时，经常会遇到各种构建错误。其中一种常见但容易忽略的错误是YAML Front Matter解析错误。今天在构建博客时遇到了以下错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error: YAML Exception reading /path/to/_posts/2026-03-04-fixing-github-actions-deprecation-errors.md: (&lt;unknown&gt;): mapping values are not allowed in this context at line 3 column 63</span><br></pre></td></tr></table></figure>
+
+<p>这个错误导致Jekyll构建失败，网站无法正常生成。错误信息指向YAML解析问题，具体位置是第3行第63列。</p>
+<h2 id="错误分析"><a href="#错误分析" class="headerlink" title="错误分析"></a>错误分析</h2><h3 id="原始问题代码"><a href="#原始问题代码" class="headerlink" title="原始问题代码"></a>原始问题代码</h3><p>检查出错的Front Matter部分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: 修复GitHub Actions弃用错误</span><br><span class="line">description: 本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact: v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。</span><br><span class="line">author: SG-Amadeus</span><br><span class="line">date: 2026-03-04 00:00:00 +0800</span><br><span class="line">categories: [GitHub, DevOps, CI/CD]</span><br><span class="line">tags: [github actions, ci/cd, automation, deployment, jekyll]</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<h3 id="问题根源"><a href="#问题根源" class="headerlink" title="问题根源"></a>问题根源</h3><p>问题出现在<code>description</code>字段的第63个字符处。仔细分析：</p>
+<ol>
+<li><strong>冒号的特殊作用</strong>：在YAML语法中，冒号<code>:</code>是键值对的分隔符</li>
+<li><strong>字符串中的冒号</strong>：<code>description</code>字段包含文本<code>&quot;actions/upload-artifact: v3已弃用&quot;</code></li>
+<li><strong>解析器混淆</strong>：YAML解析器将字符串内的冒号<code>:</code>误认为是新的键值对开始</li>
+<li><strong>位置计算</strong>：第63列正好是<code>actions/upload-artifact:</code>中的冒号位置</li>
+</ol>
+<h3 id="YAML解析规则"><a href="#YAML解析规则" class="headerlink" title="YAML解析规则"></a>YAML解析规则</h3><p>YAML解析器按照以下规则处理字符串：</p>
+<ul>
+<li>未引用的字符串中的冒号可能被解释为键值对分隔符</li>
+<li>引号内的字符串中的冒号应该被正确识别为文本内容</li>
+<li>但在某些YAML解析器中，即使引号内也可能出现解析歧义</li>
+</ul>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="方案一：使用单引号包裹整个字符串（推荐）"><a href="#方案一：使用单引号包裹整个字符串（推荐）" class="headerlink" title="方案一：使用单引号包裹整个字符串（推荐）"></a>方案一：使用单引号包裹整个字符串（推荐）</h3><p>将description字段用单引号<code>&#39;</code>包裹起来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: &#x27;本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact: v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>优点</strong>：</p>
+<ul>
+<li>明确告诉YAML解析器这是一个完整的字符串</li>
+<li>保留字符串内所有的特殊字符（包括冒号和双引号）</li>
+<li>符合YAML最佳实践</li>
+</ul>
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>单引号内不能再包含单引号，除非转义</li>
+<li>双引号在单引号内不需要转义</li>
+</ul>
+<h3 id="方案二：修改字符串内容避免冒号"><a href="#方案二：修改字符串内容避免冒号" class="headerlink" title="方案二：修改字符串内容避免冒号"></a>方案二：修改字符串内容避免冒号</h3><p>如果不想使用引号，可以修改描述内容，移除或替换冒号：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: 本文详细记录如何解决GitHub Actions中&quot;actions/upload-artifact v3已弃用&quot;的错误，包括问题诊断、版本升级步骤和验证方法。</span><br></pre></td></tr></table></figure>
+
+<p><strong>更改</strong>：<code>actions/upload-artifact: v3</code> → <code>actions/upload-artifact v3</code></p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li>无需添加引号，保持简洁</li>
+<li>避免所有可能的解析歧义</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>可能改变原始语义（版本标识符中的冒号有特定含义）</li>
+<li>不是通用解决方案</li>
+</ul>
+<h3 id="方案三：使用双引号并转义冒号"><a href="#方案三：使用双引号并转义冒号" class="headerlink" title="方案三：使用双引号并转义冒号"></a>方案三：使用双引号并转义冒号</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">description: &quot;本文详细记录如何解决GitHub Actions中\&quot;actions/upload-artifact: v3已弃用\&quot;的错误，包括问题诊断、版本升级步骤和验证方法。&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong>：</p>
+<ul>
+<li>双引号内需要转义双引号<code>\&quot;</code></li>
+<li>冒号在双引号内通常安全，但某些解析器仍有问题</li>
+</ul>
+<h2 id="YAML-Front-Matter最佳实践"><a href="#YAML-Front-Matter最佳实践" class="headerlink" title="YAML Front Matter最佳实践"></a>YAML Front Matter最佳实践</h2><h3 id="1-字符串引用规则"><a href="#1-字符串引用规则" class="headerlink" title="1. 字符串引用规则"></a>1. 字符串引用规则</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 安全：普通文本无需引号</span><br><span class="line">title: 我的博客文章</span><br><span class="line"></span><br><span class="line"># 推荐：包含特殊字符时使用单引号</span><br><span class="line">description: &#x27;包含:冒号、@符号或#井号的内容&#x27;</span><br><span class="line"></span><br><span class="line"># 必要：包含单引号时使用双引号</span><br><span class="line">excerpt: &quot;这是一个&#x27;包含单引号&#x27;的示例&quot;</span><br><span class="line"></span><br><span class="line"># 复杂：同时包含单双引号时使用转义</span><br><span class="line">summary: &quot;他说：&#x27;这是一个\&quot;重要\&quot;通知&#x27;&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-特殊字符处理"><a href="#2-特殊字符处理" class="headerlink" title="2. 特殊字符处理"></a>2. 特殊字符处理</h3><table>
+<thead>
+<tr>
+<th>字符</th>
+<th>处理方法</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>冒号<code>:</code></td>
+<td>单引号包裹</td>
+<td><code>&#39;内容:包含冒号&#39;</code></td>
+</tr>
+<tr>
+<td>井号<code>#</code></td>
+<td>单引号包裹</td>
+<td><code>&#39;标题#副标题&#39;</code></td>
+</tr>
+<tr>
+<td>方括号<code>[]</code></td>
+<td>通常安全</td>
+<td><code>tags: [tag1, tag2]</code></td>
+</tr>
+<tr>
+<td>花括号<code>{}</code></td>
+<td>通常安全</td>
+<td><code>options: {key: value}</code></td>
+</tr>
+<tr>
+<td>百分号<code>%</code></td>
+<td>通常安全</td>
+<td><code>progress: 100%</code></td>
+</tr>
+</tbody></table>
+<h3 id="3-多行字符串处理"><a href="#3-多行字符串处理" class="headerlink" title="3. 多行字符串处理"></a>3. 多行字符串处理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 使用|保留换行符</span><br><span class="line">excerpt: |</span><br><span class="line">  这是第一行</span><br><span class="line">  这是第二行</span><br><span class="line">  包含:特殊字符</span><br><span class="line"></span><br><span class="line"># 使用&gt;折叠换行符</span><br><span class="line">summary: &gt;</span><br><span class="line">  这是一个长段落，会被折叠成单行，</span><br><span class="line">  但仍然可以包含各种特殊符号。</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-验证工具"><a href="#4-验证工具" class="headerlink" title="4. 验证工具"></a>4. 验证工具</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 使用Ruby的YAML解析器验证</span><br><span class="line">ruby -e &quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;_posts/example.md&#x27;)&quot;</span><br><span class="line"></span><br><span class="line"># 使用yamllint工具</span><br><span class="line">yamllint _posts/example.md</span><br><span class="line"></span><br><span class="line"># Jekyll本地构建测试</span><br><span class="line">bundle exec jekyll build --trace</span><br></pre></td></tr></table></figure>
+
+<h2 id="调试技巧"><a href="#调试技巧" class="headerlink" title="调试技巧"></a>调试技巧</h2><h3 id="1-定位错误位置"><a href="#1-定位错误位置" class="headerlink" title="1. 定位错误位置"></a>1. 定位错误位置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启用详细跟踪</span><br><span class="line">bundle exec jekyll build --trace</span><br><span class="line"></span><br><span class="line"># 查看具体行号和列号</span><br><span class="line"># 错误信息中的&quot;line 3 column 63&quot;直接指出问题位置</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-隔离测试"><a href="#2-隔离测试" class="headerlink" title="2. 隔离测试"></a>2. 隔离测试</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 创建测试文件</span><br><span class="line">echo &quot;---</span><br><span class="line">title: 测试</span><br><span class="line">description: 测试:包含冒号</span><br><span class="line">---&quot; &gt; test.md</span><br><span class="line"></span><br><span class="line"># 单独构建测试文件</span><br><span class="line">bundle exec jekyll build --source . --destination _test</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-在线验证工具"><a href="#3-在线验证工具" class="headerlink" title="3. 在线验证工具"></a>3. 在线验证工具</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.yamllint.com/">YAML Lint</a> - 在线YAML验证</li>
+<li><a target="_blank" rel="noopener" href="https://codebeautify.org/yaml-validator">YAML Validator</a> - 语法检查</li>
+<li><a target="_blank" rel="noopener" href="https://jekyllrb.com/docs/configuration/options/">Jekyll CLI</a> - 本地构建测试</li>
+</ul>
+<h2 id="常见YAML错误场景"><a href="#常见YAML错误场景" class="headerlink" title="常见YAML错误场景"></a>常见YAML错误场景</h2><h3 id="1-未闭合的引号"><a href="#1-未闭合的引号" class="headerlink" title="1. 未闭合的引号"></a>1. 未闭合的引号</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 错误</span><br><span class="line">description: &#x27;未闭合的字符串</span><br><span class="line"></span><br><span class="line"># 正确</span><br><span class="line">description: &#x27;闭合的字符串&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-混合制表符和空格"><a href="#2-混合制表符和空格" class="headerlink" title="2. 混合制表符和空格"></a>2. 混合制表符和空格</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 错误（制表符缩进）</span><br><span class="line">title: 测试</span><br><span class="line">	description: 内容  # ← 制表符</span><br><span class="line"></span><br><span class="line"># 正确（空格缩进）</span><br><span class="line">title: 测试</span><br><span class="line">  description: 内容  # ← 两个空格</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-列表格式错误"><a href="#3-列表格式错误" class="headerlink" title="3. 列表格式错误"></a>3. 列表格式错误</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 错误</span><br><span class="line">tags: [tag1, tag2,]</span><br><span class="line"></span><br><span class="line"># 正确</span><br><span class="line">tags: [tag1, tag2]</span><br><span class="line"># 或</span><br><span class="line">tags:</span><br><span class="line">  - tag1</span><br><span class="line">  - tag2</span><br></pre></td></tr></table></figure>
+
+<h2 id="预防措施"><a href="#预防措施" class="headerlink" title="预防措施"></a>预防措施</h2><h3 id="1-编辑器配置"><a href="#1-编辑器配置" class="headerlink" title="1. 编辑器配置"></a>1. 编辑器配置</h3><ul>
+<li>使用支持YAML语法高亮的编辑器（VS Code、Vim、Sublime Text）</li>
+<li>配置自动缩进为2个空格</li>
+<li>启用YAML语法检查插件</li>
+</ul>
+<h3 id="2-预提交检查"><a href="#2-预提交检查" class="headerlink" title="2. 预提交检查"></a>2. 预提交检查</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># pre-commit hook示例</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> $(git diff --cached --name-only | grep -E <span class="string">&#x27;\.(md|markdown)$&#x27;</span>); <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">if</span> ! ruby -e <span class="string">&quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;<span class="variable">$file</span>&#x27;)&quot;</span> 2&gt;/dev/null; <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;YAML错误在文件: <span class="variable">$file</span>&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-持续集成验证"><a href="#3-持续集成验证" class="headerlink" title="3. 持续集成验证"></a>3. 持续集成验证</h3><p>在GitHub Actions工作流中添加YAML验证步骤：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Validate</span> <span class="string">YAML</span> <span class="string">Front</span> <span class="string">Matter</span></span><br><span class="line">  <span class="attr">run:</span> <span class="string">|</span></span><br><span class="line"><span class="string">    for file in _posts/*.md; do</span></span><br><span class="line"><span class="string">      echo &quot;验证: $file&quot;</span></span><br><span class="line"><span class="string">      ruby -e &quot;require &#x27;yaml&#x27;; YAML.load_file(&#x27;$file&#x27;)&quot;</span></span><br><span class="line"><span class="string">    done</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>YAML Front Matter错误是Jekyll博客部署中的常见问题，但通过理解YAML解析规则和采取适当的预防措施，可以轻松避免这些问题。</p>
+<p><strong>关键要点</strong>：</p>
+<ol>
+<li><strong>引号策略</strong>：包含特殊字符（特别是冒号）的字符串使用单引号包裹</li>
+<li><strong>验证流程</strong>：在提交前使用工具验证YAML语法</li>
+<li><strong>编辑器支持</strong>：使用正确的编辑器配置减少人为错误</li>
+<li><strong>渐进修复</strong>：从简单问题开始，逐步处理复杂情况</li>
+</ol>
+<p><strong>最终建议</strong>：对于所有包含特殊字符的Front Matter字段，统一使用单引号包裹，这是最简单、最安全的做法。</p>
+<p>通过这次YAML解析错误的修复经验，我们不仅解决了具体的技术问题，还建立了一套完整的YAML语法验证和预防体系，为未来的博客部署工作奠定了坚实的基础。</p>
+<blockquote>
+<p><strong>本文档生成说明</strong>：本文章由Claude Code根据实际修复Jekyll YAML解析错误的会话过程自动生成，专注于YAML语法问题的分析和解决方案。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/03/04/2026-03-04-fixing-yaml-parsing-errors-in-jekyll-blogs/" data-id="cuidG8UFn4TWDvU8w72bwpesp" data-title="解决Jekyll博客中的YAML解析错误，description字段冒号问题" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2026/03/04/2026-03-04-fixing-github-actions-deprecation-errors/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          修复GitHub Actions弃用错误
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/">AI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">工程实践</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E5%88%86%E6%9E%90/">技术分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/%E6%8A%80%E6%9C%AF%E8%B6%8B%E5%8A%BF/">技术趋势</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">系统架构</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/">职业发展</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/%E6%8A%80%E6%9C%AF%E9%9D%A2%E8%AF%95/">技术面试</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/">软件开发</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/">AI Agents</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/">Software Engineering</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI-Agents/Software-Engineering/System-Design/">System Design</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/">AI编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/">软件架构</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/AI%E7%BC%96%E7%A8%8B/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84/%E4%BA%BA%E6%9C%BA%E5%8D%8F%E4%BD%9C/">人机协作</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/">系统编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B/%E9%AB%98%E6%80%A7%E8%83%BD%E6%9C%8D%E5%8A%A1%E5%99%A8/">高性能服务器</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/">GitHub</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/GitHub/DevOps/CI-CD/">CI/CD</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/">Jekyll</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/">DevOps</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Jekyll/DevOps/Blogging/">Blogging</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/">Web Automation</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/">Testing</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Web-Automation/Testing/Security/">Security</a></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/">Zotero</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/">API</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Zotero/%E8%87%AA%E5%8A%A8%E5%8C%96/API/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/">项目开发</a></li></ul></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/">架构设计</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/">CLI</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/%E8%87%AA%E5%8A%A8%E5%8C%96/CLI/AI%E6%99%BA%E8%83%BD%E4%BD%93/">AI智能体</a></li></ul></li></ul></li></ul></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI%E9%9D%A2%E8%AF%95/" rel="tag">AI面试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-interface/" rel="tag">agent-interface</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent-memory/" rel="tag">agent-memory</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agents/" rel="tag">ai agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-agent/" rel="tag">ai-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-assisted-programming/" rel="tag">ai-assisted-programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ai-native/" rel="tag">ai-native</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/aider/" rel="tag">aider</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anthropic/" rel="tag">anthropic</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/anti-bot/" rel="tag">anti-bot</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/architecture/" rel="tag">architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asynchronous/" rel="tag">asynchronous</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation/" rel="tag">automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/automation-framework/" rel="tag">automation-framework</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/best-practices/" rel="tag">best-practices</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog-deployment/" rel="tag">blog deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/chrome-devtools/" rel="tag">chrome-devtools</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ci-cd/" rel="tag">ci&#x2F;cd</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-code/" rel="tag">claude-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/claude-mem/" rel="tag">claude-mem</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cli-anything/" rel="tag">cli-anything</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/coding-assistant/" rel="tag">coding-assistant</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent-programming/" rel="tag">concurrent programming</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/deployment/" rel="tag">deployment</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/distributed-systems/" rel="tag">distributed systems</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/engineering/" rel="tag">engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/evolution/" rel="tag">evolution</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/front-matter/" rel="tag">front matter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/future-trends/" rel="tag">future-trends</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/" rel="tag">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-actions/" rel="tag">github-actions</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hardcoding/" rel="tag">hardcoding</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/harness-engineering/" rel="tag">harness-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/http-api/" rel="tag">http-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/human-ai-collaboration/" rel="tag">human-ai-collaboration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jekyll/" rel="tag">jekyll</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm/" rel="tag">llm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/llm-integration/" rel="tag">llm-integration</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/local-api/" rel="tag">local-api</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/long-running-agents/" rel="tag">long-running agents</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lsp/" rel="tag">lsp</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-architecture/" rel="tag">memory-architecture</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/memory-system/" rel="tag">memory-system</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-session-coordination/" rel="tag">multi-session-coordination</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/openai/" rel="tag">openai</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/opencode/" rel="tag">opencode</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/parsing-error/" rel="tag">parsing error</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/playwright/" rel="tag">playwright</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/scheduler/" rel="tag">scheduler</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/serena/" rel="tag">serena</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/software-engineering/" rel="tag">software-engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sogou/" rel="tag">sogou</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/spec-driven-development/" rel="tag">spec-driven-development</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/superpowers/" rel="tag">superpowers</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/system-design/" rel="tag">system design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/task-management/" rel="tag">task-management</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/testing/" rel="tag">testing</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/thread-pool/" rel="tag">thread pool</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tool-design/" rel="tag">tool-design</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/typescript/" rel="tag">typescript</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-automation/" rel="tag">web-automation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web-scraping/" rel="tag">web-scraping</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/workflow/" rel="tag">workflow</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/yaml/" rel="tag">yaml</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zero-code/" rel="tag">zero-code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/zotero/" rel="tag">zotero</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" rel="tag">八股文</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag">大模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" rel="tag">开发者学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" rel="tag">架构分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" rel="tag">设计规范</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" rel="tag">面试技巧</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/AI%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">AI面试</a> <a href="/tags/agent-interface/" style="font-size: 10px;">agent-interface</a> <a href="/tags/agent-memory/" style="font-size: 10px;">agent-memory</a> <a href="/tags/ai-agents/" style="font-size: 13.33px;">ai agents</a> <a href="/tags/ai-agent/" style="font-size: 20px;">ai-agent</a> <a href="/tags/ai-assisted-programming/" style="font-size: 10px;">ai-assisted-programming</a> <a href="/tags/ai-native/" style="font-size: 10px;">ai-native</a> <a href="/tags/aider/" style="font-size: 10px;">aider</a> <a href="/tags/anthropic/" style="font-size: 13.33px;">anthropic</a> <a href="/tags/anti-bot/" style="font-size: 10px;">anti-bot</a> <a href="/tags/architecture/" style="font-size: 13.33px;">architecture</a> <a href="/tags/asynchronous/" style="font-size: 10px;">asynchronous</a> <a href="/tags/automation/" style="font-size: 16.67px;">automation</a> <a href="/tags/automation-framework/" style="font-size: 10px;">automation-framework</a> <a href="/tags/best-practices/" style="font-size: 10px;">best-practices</a> <a href="/tags/blog-deployment/" style="font-size: 10px;">blog deployment</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/chrome-devtools/" style="font-size: 10px;">chrome-devtools</a> <a href="/tags/ci-cd/" style="font-size: 10px;">ci/cd</a> <a href="/tags/claude-code/" style="font-size: 16.67px;">claude-code</a> <a href="/tags/claude-mem/" style="font-size: 10px;">claude-mem</a> <a href="/tags/cli-anything/" style="font-size: 10px;">cli-anything</a> <a href="/tags/coding-assistant/" style="font-size: 10px;">coding-assistant</a> <a href="/tags/concurrent-programming/" style="font-size: 10px;">concurrent programming</a> <a href="/tags/deployment/" style="font-size: 10px;">deployment</a> <a href="/tags/distributed-systems/" style="font-size: 10px;">distributed systems</a> <a href="/tags/engineering/" style="font-size: 10px;">engineering</a> <a href="/tags/evolution/" style="font-size: 10px;">evolution</a> <a href="/tags/front-matter/" style="font-size: 10px;">front matter</a> <a href="/tags/future-trends/" style="font-size: 10px;">future-trends</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/github-actions/" style="font-size: 10px;">github-actions</a> <a href="/tags/hardcoding/" style="font-size: 10px;">hardcoding</a> <a href="/tags/harness-engineering/" style="font-size: 10px;">harness-engineering</a> <a href="/tags/http-api/" style="font-size: 13.33px;">http-api</a> <a href="/tags/human-ai-collaboration/" style="font-size: 10px;">human-ai-collaboration</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/jekyll/" style="font-size: 13.33px;">jekyll</a> <a href="/tags/llm/" style="font-size: 10px;">llm</a> <a href="/tags/llm-integration/" style="font-size: 13.33px;">llm-integration</a> <a href="/tags/local-api/" style="font-size: 10px;">local-api</a> <a href="/tags/long-running-agents/" style="font-size: 10px;">long-running agents</a> <a href="/tags/lsp/" style="font-size: 10px;">lsp</a> <a href="/tags/memory-architecture/" style="font-size: 10px;">memory-architecture</a> <a href="/tags/memory-system/" style="font-size: 10px;">memory-system</a> <a href="/tags/multi-session-coordination/" style="font-size: 10px;">multi-session-coordination</a> <a href="/tags/openai/" style="font-size: 13.33px;">openai</a> <a href="/tags/opencode/" style="font-size: 10px;">opencode</a> <a href="/tags/parsing-error/" style="font-size: 10px;">parsing error</a> <a href="/tags/playwright/" style="font-size: 10px;">playwright</a> <a href="/tags/python/" style="font-size: 10px;">python</a> <a href="/tags/scheduler/" style="font-size: 10px;">scheduler</a> <a href="/tags/serena/" style="font-size: 10px;">serena</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software engineering</a> <a href="/tags/software-engineering/" style="font-size: 13.33px;">software-engineering</a> <a href="/tags/sogou/" style="font-size: 10px;">sogou</a> <a href="/tags/spec-driven-development/" style="font-size: 10px;">spec-driven-development</a> <a href="/tags/superpowers/" style="font-size: 10px;">superpowers</a> <a href="/tags/system-design/" style="font-size: 13.33px;">system design</a> <a href="/tags/task-management/" style="font-size: 10px;">task-management</a> <a href="/tags/testing/" style="font-size: 13.33px;">testing</a> <a href="/tags/thread-pool/" style="font-size: 10px;">thread pool</a> <a href="/tags/tool-design/" style="font-size: 10px;">tool-design</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web-automation/" style="font-size: 10px;">web-automation</a> <a href="/tags/web-scraping/" style="font-size: 10px;">web-scraping</a> <a href="/tags/workflow/" style="font-size: 13.33px;">workflow</a> <a href="/tags/yaml/" style="font-size: 10px;">yaml</a> <a href="/tags/zero-code/" style="font-size: 10px;">zero-code</a> <a href="/tags/zotero/" style="font-size: 16.67px;">zotero</a> <a href="/tags/%E5%85%AB%E8%82%A1%E6%96%87/" style="font-size: 10px;">八股文</a> <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" style="font-size: 10px;">大模型</a> <a href="/tags/%E5%BC%80%E5%8F%91%E8%80%85%E5%AD%A6%E4%B9%A0/" style="font-size: 10px;">开发者学习</a> <a href="/tags/%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90/" style="font-size: 10px;">架构分析</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E8%A7%84%E8%8C%83/" style="font-size: 10px;">设计规范</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E6%8A%80%E5%B7%A7/" style="font-size: 10px;">面试技巧</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/03/">March 2026</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2026/03/17/2026-03-17-dancing-with-eight-part-essay-interviews-in-ai-era/">大模型时代下，开发者如何与&#34;八股文&#34;面试共舞？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/16/2026-03-16-cli-anything-architecture-design-analysis/">CLI-Anything架构设计深度解析：从规范方法论到工程实践的思考</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/15/2026-03-15-llm-hardcoding-philosophy/">当AI写代码时，为什么它总是把配置写死在代码里？</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/14/2026-03-14-zotero-llm-bridge-implementation/">Zotero LLM Bridge：从 HTTP API 到本地数据管理的完整实现</a>
+          </li>
+        
+          <li>
+            <a href="/2026/03/13/2026-03-13-zotero-local-data-modification-gui-scripts-http-api/">打破 Zotero 的本地数据修改壁垒——从 GUI 脚本到 HTTP API 的探索之路</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2026 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
